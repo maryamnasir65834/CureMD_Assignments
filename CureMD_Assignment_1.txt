@@ -1,0 +1,150 @@
+                    Q#1   Summing 2 numbers:
+
+PROGRAM SUM_OF_TWO_NUMBERS
+     INPUT A
+     INPUT B
+     C=A+B
+     PRINT"Sum of two Numbers=",C
+END PROGRAM
+
+**********************************************************
+
+                    Q#2   Even Numbers:
+
+PROGRAM EVEN_NUMBERS
+     LET,
+            A=1
+     While  A<=100
+            IF A mod 2 == 0
+            THEN
+                 PRINT "Even Number=",A
+            ELSE:
+                  A=A+1
+                  CONTINUE
+             END IF
+             A=A+1
+     END While
+END PROGRAM 
+
+*********************************************************
+
+                    Q#3   Checking for LEAP Year:
+
+FUNCTION CHECK_LEAP_YEAR(Year, no_of_days)
+     IF no_of_days == 366
+     THEN
+          PRINT "This is a Leap Year",year
+      ELSE:
+          PRINT "This year is not a Leap Year"
+    END IF
+END FUNCTION
+
+**********************************************************
+
+                    Q#4   Conversion from km/h to miles/h
+
+FUNCTION DISTANCE_CONVERSION(Km_per_hour)
+     LET,
+            Miles_per_hour = Km_per_hour * 0.621371 
+            PRINT "Converted speed is:" ,Miles_per_hour
+     RETURN Miles_per_hour
+END FUNCTION
+
+***********************************************************
+
+                    Q#5   Checking Buzz Number:
+
+PROGRAM CHECK_BUZZ_NUMBER
+     INPUT Number
+     IF Number Mod 7 == 0 OR Number Mod 10 == 7
+     THEN
+        PRINT "Given number is a BUZZ number",Number
+      ELSE:
+        PRINT "Given number is not a BUZZ number"
+      END IF
+END PROGRAM
+
+*********************************************************
+
+                    Q#6   Printing Table 1 to 10
+
+FUNCTION MULTIPLICATION_TABLE(Number)
+     FOR i = 1 to 10
+        TABLE = n + "x" + i + "=" + (n*i)
+         PRINT TABLE
+     END FOR
+END FUNCTION
+
+********************************************************
+
+                    Q#7   Factorial (By Recursion)
+
+FUNCTION FACTORAIL(Number)
+    IF Number == 0 OR Number == 1
+    THEN
+        RETURN 1
+     ELSE:
+         RESULT = Number* FACTORIAL(Number - 1)
+         RETURN RESULT
+     END IF
+END FUNCTION
+
+********************************************************
+
+                    Q#8   Checking Prime Number:
+
+FUNCTION CHECK PRIME_NUMBER(n)
+       IF n<=1
+       THEN 
+         PRINT " Given Number is not a Prime Number",n
+        RETURN FALSE
+       END IF
+       FOR i = 2 to (n-1)
+         IF n MOD i == 0 
+         THEN
+          PRINT ("Given Number is not a Prime Number"),n
+          RETURN FALSE
+          END IF
+       END FOR
+          PRINT " Given Number is a Prime Number" ,n
+          RETURN TRUE
+END FUNCTION
+
+************************************************************
+
+                    Q#9   Type of Triangle:
+
+PROGRAM TYPE_OF_TRAINGLE
+     INPUT A
+     INPUT B
+     INPUT C
+     IF A == B  AND B == C
+     THEN
+          PRINT" Triangle is a quadilateral traingle"
+     ELIF
+           A == B  AND B != C
+          PRINT "Traingle is a isoceles triangle"
+     ELSE:
+           PRINT "Traingle is a scalen Traingle"
+END PROGRAM
+
+************************************************************
+
+                    Q#10   Pattern printing:
+
+PROGRAM PRINT_PATTERN
+          (Method 1: by print statements)
+      Print "*"
+      Print "* *"
+      Print "* * *"
+      Print "* * * *"
+      Print "* * * * *"
+           (Method 2: by loop)   
+     i = 1
+     While i <= 5
+     PRINT ("*" * i)
+     i = i +1
+END PROGRAM
+     
+
+            
