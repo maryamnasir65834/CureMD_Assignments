@@ -86,3 +86,46 @@ class Program
 
     }
 }
+
+
+using System;
+
+public class Program
+{
+    public static void Main()
+    {
+        int number = 12321; // Example number to check for palindrome
+        bool isPalindrome = PALINDROME_NUMBER_CHECK(number);
+        
+        if (isPalindrome)
+        {
+            Console.WriteLine("GIVEN NUMBER IS A PALINDROME NUMBER");
+        }
+        else
+        {
+            Console.WriteLine("Given Number is Not a Palindrome Number");
+        }
+    }
+
+
+
+       BONUS
+
+
+
+    static bool PALINDROME_NUMBER_CHECK(int number)
+    {
+        string mainString = number.ToString(); // Convert number to string
+        string reversedString = ReverseString(mainString); // Reverse the string
+        
+        return mainString == reversedString; // Compare original and reversed strings
+    }
+
+    static string ReverseString(string str)
+    {
+        char[] charArray = str.ToCharArray();
+        Array.Reverse(charArray);
+        return new string(charArray);
+    }
+}
+
