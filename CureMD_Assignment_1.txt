@@ -146,5 +146,20 @@ PROGRAM PRINT_PATTERN
      i = i +1
 END PROGRAM
      
+********************************************************
 
+                    Q#11  Bonus Question(by treating it as a sum)
+
+FUNCTION PALINDROME_NUMBER_CHECK(Number)
+     Main_string = ToString(Number)
+     Reversed_String= reverse(Main_String)
+  IF 
+     Main_String == Reversed_String
+     PRINT("GIVEN NUMBER IS A PALINDROME NUMBER")
+       RETURN TRUE
+ ELSE:
+     PRINT("Given Number is Not a Palindrome Number")
+       RETURN FALSE
+  END IF
+END FUNCTION
             
