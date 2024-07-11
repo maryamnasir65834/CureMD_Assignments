@@ -1,0 +1,65 @@
+class Program
+{
+    static void Main()
+    {
+        // Creating an instance of Library
+        Library library = new Library("City Library", 101);
+
+        // Adding initial books to the library
+        Book book1 = new Book("Science Book 11", "PTB", 1);
+        Book book2 = new Book("Physics Book", "Punjab Text Book Board Lahore", 2);
+        Book book3 = new Book("Finding Nemo", "Andrew Stanton", 3);
+        Book book4 = new Book("Oliver Twist", "Charles Dickens", 4);
+        library.AddBook(book1);
+        library.AddBook(book2);
+        library.AddBook(book3);
+        library.AddBook(book4);
+
+        bool exit = false;
+        while (!exit)
+        {
+            Console.WriteLine("\nOptions:");
+            Console.WriteLine("1. Add a book");
+            Console.WriteLine("2. Remove a book");
+            Console.WriteLine("3. View all books");
+            Console.WriteLine("4. Exit");
+            Console.Write("Enter your choice: ");
+
+            string input = Console.ReadLine();
+            Console.WriteLine();
+
+            switch (input)
+            {
+                case "1":
+                    Console.Write("Enter Title: ");
+                    string title = Console.ReadLine();
+                    Console.Write("Enter Author: ");
+                    string author = Console.ReadLine();
+                    Console.Write("Enter Book ID: ");
+                    int bookId = int.Parse(Console.ReadLine());
+                    Book newBook = new Book(title, author, bookId);
+                    library.AddBook(newBook);
+                    break;
+
+                case "2":
+                    Console.Write("Enter Book ID to remove: ");
+                    int removeId = int.Parse(Console.ReadLine());
+                    library.RemoveBook(removeId);
+                    break;
+
+                case "3":
+                    library.ViewBooks();
+                    break;
+
+                case "4":
+                    exit = true;
+                    Console.WriteLine("Exiting the program.");
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid option. Please try again.");
+                    break;
+            }
+        }
+    }
+}
