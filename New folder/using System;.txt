@@ -1,0 +1,93 @@
+using System;
+class MainClass
+{
+    public static int FirstFactorial(int num)
+    {
+        // Base case: factorial of 0 or 1 is 1
+        if (num == 0 || num == 1)
+        {
+            return 1;
+        }
+
+        // Variable to store the factorial result
+        int Factorial = 1;
+
+        // Calculate factorial using a loop
+        for (int i = 2; i <= num; i++)
+        {
+            Factorial = Factorial+ i;
+        }
+
+        return Factorial;
+    }
+
+    public static void Main()
+    {
+        // Example usage:
+        int input = 4;
+        Console.WriteLine($"Factorial of {input} is: {FirstFactorial(input)}"); // Output: 24
+    }
+}
+
+
+
+/*using system;
+
+class MainClass
+{
+    public static string ArrayMatching(string[] strArr)
+    {
+        // Parse the input arrays from string format to integer arrays
+        int[] array_1 = ParseIntArray(strArr[0]);
+        int[] array_2 = ParseIntArray(strArr[1]);
+
+        // Determinimume lengths of both arrays
+        int length_1 = array_1.Length;
+        int length_2 = array_2.Length;
+
+        // Calculate the maximumimum length between the two arrays
+        int maximum_length = Math.maximum(length_1, length_2);
+
+        // Array to store the sums
+        int[] sums = new int[maximum_length];
+
+        // Calculate sums of corresponding elements
+        for (int i = 0; i < maximum_length; i++)
+        {
+            int sum = 0;
+            if (i < length_1) sum += array_1[i];
+            if (i < length_2) sum += array_2[i];
+            sums[i] = sum;
+        }
+
+        // Convert sums array to a hyphen-separated string
+        string result = string.Join("-", sums);
+
+        return result;
+    }
+
+    // Helper method to parse a string representing an array of integers
+    private static int[] ParseIntArray(string str)
+    {
+        // Remove brackets and split by comma to get individual number strings
+        string[] numStrs = str.Substring(1, str.Length - 2).Split(',');
+
+        // Parse each number string into an integer
+        int[] nums = new int[numStrs.Length];
+        for (int i = 0; i < numStrs.Length; i++)
+        {
+            nums[i] = int.Parse(numStrs[i].Trim());
+        }
+
+        return nums;
+    }
+
+    public static void Main()
+    {
+        // Example usage
+        string[] strarray_1 = { "[1, 2, 5, 6]", "[5, 2, 8, 11]" };
+        string[] strarray_2 = { "[1, 2, 5]", "[5, 2, 8, 11, 3]" };
+        Console.WriteLine(ArrayMatching(strarray_1)); // Output: "6-4-13-17"
+        Console.WriteLine(ArrayMatching(strarray_2)); // Output: "6-4-13-17-3"
+    }
+}

@@ -1,0 +1,460 @@
+
+/* Reset and basic styling */
+body {
+    font-family: Arial, sans-serif;                     /* Set default font */
+    background-color: #DDDDDD;                        /* Light gray background */
+    color: #333;                                      /* Dark gray text color */
+    margin: 0;
+    padding: 0;
+}
+
+/* Header styling */
+header {
+    background-color: #003355;                         /* Dark blue background */
+    color: #fff;                                       /* White text color */
+    padding: 10px 0;                                     /* Padding top and bottom */
+    text-align: center;                                  /* Center align text */
+}
+
+/* Navbar styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #003355;
+    padding: 10px 0;
+    opacity: 1;
+    animation: fadeIn 2s forwards; /* Assuming `fadeIn` animation is defined */
+    position: relative; /* Ensure positioning context for absolute children */
+}
+
+.container {
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative; /* Ensure positioning context for absolute children */
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.nav-links li {
+    margin-right: 20px;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    padding: 10px;
+}
+
+.nav-links a:hover {
+    color: #5998c2;
+}
+
+.decoration {
+    padding: 2px 5px;
+    font-family: sans-serif;
+    font-size: 20px;
+}
+
+/* Dropdown menu */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown content */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #DDDDDD;
+    z-index: 1;
+    min-width: 160px;
+    top: 100%;
+    margin-top: 10px;
+}
+
+.dropdown-content a {
+    color: #3d3939;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+    white-space: nowrap;
+}
+
+.dropdown-content a:hover {
+    background-color: #5998c2;
+    color: #003355;
+    border-radius: 3px;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Search bar */
+#search-bar {
+    position: absolute;
+    bottom: 0;
+    left: 50%; /* Align to the center horizontally */
+    transform: translateX(-50%); /* Adjust to center properly */
+    padding: 8px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#search-bar::placeholder {
+    color: #999;
+}
+
+#search-bar:focus {
+    outline: none;
+    border-color: #555;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+/* Placeholder for animation definition */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+
+/* Heading styles */
+h1 {
+    font-size: 3.5rem;                                   /* Large font size */
+    font-family: 'Times New Roman', sans-serif;          /* Font family */
+    font-weight: bold;                                   /* Bold font weight */
+    text-align: center;                                  /* Center align text */
+    margin-top: 20px;                                    /* Margin top */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);       /* Text shadow */
+    opacity: 0;                                          /* Start with opacity 0 */
+    animation: fadeIn 2s forwards;                       /* Fade in animation */
+}
+
+h2 {
+    font-size: 2.5rem;                                   /* Large font size */
+    color: #003366;                                    /* Dark blue text color */
+    font-weight: bold;                                   /* Bold font weight */
+    padding: 0 5px;                                      /* Padding left and right */
+    border-radius: 3px;                                  /* Rounded corners */
+    text-transform: uppercase;                           /* Uppercase text */
+    border-bottom: 2px solid #003366;                  /* Bottom border */
+    padding-bottom: 2px;                                 /* Padding bottom */
+    letter-spacing: 1px;                                 /* Letter spacing */
+    text-shadow: 1px 1px 2px #000;                     /* Text shadow */
+    text-align: center;                                  /* Center align text */
+    font-family: 'Times New Roman', Times, serif;        /* Font family */
+    font-style: italic;                                  /* Italic font style */
+    opacity: 0;                                          /* Start with opacity 0 */
+    animation: fadeIn 2s forwards;                       /* Fade in animation */
+}
+
+h3 {
+    text-align: center;                                  /* Center align text */
+}
+
+/* Main content styling */
+main {
+    padding: 20px;                                       /* Padding inside */
+}
+
+section {
+    margin: 20px 0;                                      /* Margin top and bottom */
+    padding: 20px;                                       /* Padding inside */
+    background-color: #F0F0F0;                         /* Light gray background */
+    border-radius: 5px;                                  /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);           /* Box shadow */
+}
+
+/* Table styling */
+table {
+    width: 100%;                                         /* Full width */
+    border-collapse: collapse;                           /* Collapse borders */
+    margin: 20px 0;                                      /* Margin top and bottom */
+    background-color: #fff;                            /* White background */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);           /* Box shadow */
+    border-radius: 5px;                                  /* Rounded corners */
+}
+
+table,
+th,
+td {
+    border: 1px solid #ddd;                            /* Border style */
+}
+
+th,
+td {
+    padding: 10px;                                       /* Padding inside */
+    text-align: left;                                    /* Left align text */
+}
+
+/* Set background color for first row in thead */
+thead tr:first-child {
+    background-color: #003355;                         /* Dark blue background */
+    color: #fff;                                       /* White text color */
+}
+
+/* Full-width image styling */
+.full-width-image {
+    width: 100%;                                         /* Full width */
+    height: auto;                                        /* Auto height */
+    object-fit: cover;                                   /* Cover image */
+    opacity: 0;                                          /* Start with opacity 0 */
+    animation: zoomIn 1.5s forwards;                     /* Zoom-in animation */
+}
+
+/* Featured book image styling */
+.featured-book-image {
+    width: 100%;                                         /* Full width */
+    height: 300px;                                       /* Fixed height */
+    background-image: url('image/giphy.gif');            /* Background image */
+    background-size: cover;                              /* Cover background */
+    background-position: center;                         /* Center background */
+    background-repeat: no-repeat;                        /* No repeat */
+    margin-top: 20px;                                    /* Margin top */
+    animation: zoomIn 1.5s forwards;                     /* Animation effect */
+}
+
+/* Form container styling */
+.form-container {
+    max-width: 800px;                                    /* Maximum width */
+    margin: 20px auto;                                   /* Margin top and bottom, auto left and right */
+    padding: 20px;                                       /* Padding inside */
+    border: 1px solid #ddd;                            /* Border style */
+    border-radius: 5px;                                  /* Rounded corners */
+    background-color: #f9f9f9;                         /* Light gray background */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);          /* Box shadow */
+    font-family: Arial, sans-serif;                      /* Font family */
+    background-image: url('image/2.png');                /* Background image */
+    background-size: cover;                              /* Cover background */
+    background-position: center;                         /* Center background */
+    background-repeat: no-repeat;                        /* No repeat */
+}
+
+.form-container h2 {
+    text-align: center;                                  /* Center align text */
+    margin-bottom: 20px;                                 /* Margin bottom */
+    color: #333;                                       /* Dark gray text color */
+}
+
+.form-group {
+    margin-bottom: 15px;                                 /* Margin bottom */
+}
+
+.form-group label {
+    display: block;                                      /* Display as block */
+    margin-bottom: 5px;                                  /* Margin bottom */
+    color: #333;                                       /* Dark gray text color */
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;                                         /* Full width */
+    padding: 10px;                                       /* Padding inside */
+    border: 1px solid #ddd;                            /* Border style */
+    border-radius: 3px;                                  /* Rounded corners */
+    box-sizing: border-box;                              /* Box sizing */
+    font-family: inherit;                                /* Inherit font */
+    font-size: 14px;                                     /* Font size */
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #007bff;                             /* Focus border color */
+    outline: none;                                       /* No outline */
+}
+
+.form-group textarea {
+    resize: vertical;                                    /* Vertical resizing */
+    min-height: 100px;                                   /* Minimum height */
+}
+
+.form-group .required {
+    color: red;                                        /* Red color for required field */
+}
+
+.form-group .error-message {
+    color: red;                                        /* Red color for error message */
+    font-size: 12px;                                     /* Font size */
+    margin-top: 5px;                                     /* Margin top */
+    display: none;                                       /* Hidden by default */
+}
+
+.form-group .error input,
+.form-group .error textarea {
+    border-color: red;                                 /* Red border for error */
+}
+
+.form-group .error .error-message {
+    display: block;                                      /* Show error message */
+}
+
+.submit-btn {
+    width: 100%;                                         /* Full width */
+    padding: 10px 15px;                                  /* Padding inside */
+    background-color: #003355;                         /* Dark blue background */
+    color: white;                                      /* White text color */
+    border: none;                                        /* No border */
+    border-radius: 3px;                                  /* Rounded corners */
+    font-size: 16px;                                     /* Font size */
+    cursor: pointer;                                     /* Pointer cursor */
+}
+
+.submit-btn:hover {
+    background-color: #5998c2;                         /* Light blue hover background */
+}
+
+/* Footer styling */
+footer {
+    background-color: #003355;                         /* Dark blue background */
+    color: #fff;                                       /* White text color */
+    text-align: center;                                  /* Center align text */
+    padding: 10px 0;                                     /* Padding top and bottom */
+    position: fixed;                                     /* Fixed position */
+    width: 100%;                                         /* Full width */
+    bottom: 0;                                           /* Stick to bottom */
+}
+
+/* Customer reviews styling */
+.customer-reviews1 {
+    margin-top: 5px;                                    /* Margin top */
+    padding-top: 0.25px;                                /* Padding top */
+}
+
+.customer-reviews {
+    margin-top: 20px;                                   /* Margin top */
+    border-top: 1px solid #ddd;                       /* Top border */
+    padding-top: 20px;                                  /* Padding top */
+}
+
+.review {
+    margin-bottom: 20px;                                /* Margin bottom */
+}
+
+.rating {
+    color: #FFD700;                                   /* Gold/yellow star color */
+    font-size: 24px;                                    /* Font size */
+    text-align: center;                                 /* Center align text */
+}
+
+.star {
+    cursor: pointer;                                    /* Pointer cursor */
+}
+
+.review p {
+    margin: 10px 0;                                     /* Margin top and bottom */
+    font-size: 16px;                                    /* Font size */
+    line-height: 1.6;                                   /* Line height */
+}
+
+/* Store name decoration */
+.store-name {
+    font-weight: bold;                                  /* Bold font weight */
+    color: #5998c2;                                   /* Light blue color */
+}
+
+/* Paragraph styling */
+.Para {
+    padding: 2px 5px;                                   /* Padding inside */
+    font-family: sans-serif;                            /* Font family */
+    line-height: 1.6;                                   /* Line spacing */
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;                                     /* Start with opacity 0 */
+    }
+    to {
+        opacity: 1;                                     /* End with opacity 1 */
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);                          /* Start with smaller size */
+        opacity: 0;                                     /* Start with opacity 0 */
+    }
+    to {
+        transform: scale(1);                            /* End with normal size */
+        opacity: 1;                                     /* End with opacity 1 */
+    }
+}
+
+/* Links behind "My Online Book Store" text */
+.store-link {
+    position: relative;                                 /* Relative positioning */
+    color: inherit;                                     /* Inherit color */
+    text-decoration: none;                              /* Remove underline */
+}
+
+.store-link:hover .store-name::after {
+    content: " (Visit)";                                /* Additional content */
+    font-size: 0.8em;                                   /* Smaller font size */
+    color: #5998c2;                                   /* Light blue color */
+    margin-left: 5px;                                   /* Margin left */
+}
+
+                            /* slider*/
+
+.slides {
+    position: relative; /* Ensure positioning context for absolute buttons */
+    display: flex;
+    transition: transform 0.5s ease;
+    justify-content: flex-start; /* Adjust alignment of slides */
+}
+
+.slide {
+    flex: 0 0 33.33%;
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.slide img {
+    max-width: 70%;
+    height:fit-content
+}
+
+/* Buttons for slider navigation */
+.prev, .next {
+    position: absolute;
+    top: 120%; /* Center vertically */
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    z-index: 1;
+}
+
+.prev {
+    left: 10px; /* Adjust positioning from left */
+    transform: translateY(-50%); /* Center vertically */
+}
+
+.next {
+    right: 10px; /* Move to the right side */
+    transform: translateY(-50%); /* Center vertically */
+}
+
+                        
