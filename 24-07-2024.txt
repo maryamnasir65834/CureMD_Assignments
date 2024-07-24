@@ -1,0 +1,96 @@
+
+// Have the function StringExpression (str) read the str parameter being passed which will contain the written out version of the numbers 0-9 and the words "minus" or "plus" and convert the expression into an actual final number written out as well. For example: if str is "foursixminustwotwoplusonezero" then this converts to "46-22+10" which will evaluates to 34 and your program should return the final string threefour. if your final answer is negative it should include the word "negative".
+
+
+
+// Have the function NumberSearch(str) take the parameter str, search for all numbers in the string, add them together, then return finaal number divided by the total amount of letters in the stirng. EXAMPLE: if str is "Hello69World 2, Nic8e D7ay!" the output should be 2. First if you add  up all numbers, 6+9+2+8+7 you get 32. then there are 17 letters in the string 32/17 = 1.882, and final answer should be rounded to nearest whole number, so it i 2 in this case. only single digit numbers seperated by spaces will be used throughout the whole string(So, this wont ever be the case: hello44444 world) each string will also have one letter. 
+
+/*
+using System;
+
+class MainClass
+{
+    public static void Main(string[] args)
+    {
+        Console.WriteLine(NumberSearch("One Number*1*"));
+        Console.WriteLine(NumberSearch("H3ello9-9")); 
+    }
+
+    public static int NumberSearch(string str)
+    {
+        int sum = 0;
+        int CountingLetter = 0;
+
+       
+        foreach (char c in str)                     // Loop through each character in the string
+        {
+            if (char.IsDigit(c))
+            {
+              
+                sum = (int)(c - '0') + sum;         // Convert the character to integer and add to sum
+            }
+            else if (char.IsLetter(c))
+            {
+                
+                CountingLetter++;                   // Count the letters
+            }
+        }
+
+    
+        double result = (double)sum / CountingLetter;
+
+        
+        int roundedResult = (int)Math.Round(result);  // Round the result to the nearest whole number
+
+        return roundedResult;
+    }
+}
+*/
+
+// Have the function BitWiseOne(strArr) take the array of strings stored in srArr, which will only contain two strings of equal length that represents binary numbers, and return the final binary string that performed bitwise OR operation on both strings. A bitwise OR operater places a 0 in the new string where there are zeros in both  binary strings, otherwise it places a 1 in that spot. For example: if strArr is ["1001", "0100"] then your program should return the string "1101". c sharp code pls
+/*
+using System;
+
+class MainClass
+{
+    public static void Main(string[] args)
+    {
+        Console.WriteLine(BitWiseOne(new string[] { "1001", "0100" })); 
+        Console.WriteLine(BitWiseOne(new string[] { "1010", "1111" })); 
+        Console.WriteLine(BitWiseOne(new string[] { "0000", "1111" }));
+        Console.WriteLine(BitWiseOne(new string[] { "100", "000" }));
+        Console.WriteLine(BitWiseOne(new string[] { "00011", "01010" }));
+
+    }
+
+    public static string BitWiseOne(string[] strArr)
+    {
+        string BinaryNumber1 = strArr[0];
+        string BinaryNumber2 = strArr[1];
+
+        
+        if (BinaryNumber1.Length != BinaryNumber2.Length) // Edge case assumed: that both cases must have an equal length otherwise cant perform operation
+        {
+            throw new ArgumentException("Both binary strings must have equal length.");
+        }
+
+        int length = BinaryNumber1.Length;
+        char[] result = new char[length];
+
+      
+        for (int i = 0; i < length; i++)                   // Performing bitwise OR operation
+        {
+            if (BinaryNumber1[i] == '1' || BinaryNumber2[i] == '1')
+            {
+                result[i] = '1';
+            }
+            else
+            {
+                result[i] = '0';
+            }
+        }
+
+        return new string(result);
+    }
+}
+*/
