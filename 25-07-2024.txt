@@ -1,0 +1,173 @@
+// Have the function MeanMode(arr) take the array of numbers stored in arr and return 1 if the mode equals the mean, 0 if they don't equal each other(i.e. [5,3,3,3,1] should return 1 bcz the mode(3) equals the mean(3)). The array will not be empty, will only contain positive integers, and will not contain  more than one mode. 
+/*
+using System;
+using System.Linq;
+
+public class Program
+{
+    public static int MeanMode(int[] arr)
+    {
+      
+        double mean = arr.Sum() / (double)arr.Length;
+
+        Array.Sort(arr);
+
+
+        int mode = arr[arr.Length / 2];
+
+       
+        if (mode == mean)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public static void Main()
+    {
+        int[] arr = { 4, 4, 4, 6,2 };
+        Console.WriteLine(MeanMode(arr));
+
+        int[] arr1 = {1,2,3};
+        Console.WriteLine(MeanMode(arr1));
+
+    }
+}
+*/
+/*
+using System;
+using System.Linq;
+
+public class Program
+{
+    public static int MeanMode(int[] arr)
+    {
+ 
+        double mean = arr.Sum() / (double)arr.Length;  //  Mean Calculation
+
+
+        int mode = FindingMode(arr);   // Finding the mode if there is on;y one
+
+     
+        if (mode == mean)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+  
+    private static int FindingMode(int[] arr)        //  function for finding the mode
+    {
+        int maximumCount = 0;
+        int modeOfNumber = 0;
+
+        for (int i = 0; i < arr.Length; i++)
+        {
+            int Count = 0;
+            for (int j = 0; j < arr.Length; j++)
+            {
+                if (arr[j] == arr[i])
+                {
+                    Count++;
+                }
+            }
+
+            if (Count > maximumCount)
+            {
+                maximumCount = Count;
+                modeOfNumber = arr[i];
+            }
+        }
+
+        return modeOfNumber;
+    }
+
+    public static void Main()
+    {
+      
+        int[] arr1 = { 4, 4,4,6,2 };
+        int[] arr2 = { 1, 2, 3 };
+
+        Console.WriteLine(MeanMode(arr1)); 
+        Console.WriteLine(MeanMode(arr2));
+    }
+}
+*/
+
+//Have the function FormattedNumber(strArr) take the strArr parameter being passed, which will only conntain a single element, and return the string true if it is a valid number that contains only digits with properly placed decimals and commas, otherwise returns the string false. For Example: idf strArr is ["1,093,222.04"] then your program should return the string true, but if InputString were ["1,093,22.04"] ten your program should return the string false. The InputString may contain characters other than digits. 
+
+
+using System;
+
+public class Program
+{
+    public static string FormattedNumber(string[] strArr)
+    {
+        string input = strArr[0];
+
+        bool decimalFound = false;
+        int commaCount = 0;
+
+        for (int i = 0; i < input.Length; i++)
+        {
+            char c = input[i];
+
+            if (char.IsDigit(c))
+            {
+             
+                continue;               // Valid digits found
+            }
+            else if (c == '.')
+            {
+            
+                if (decimalFound)            // Decimal point is valid if not already there
+                    return "false";         // More than one decimal point
+                decimalFound = true;
+            }
+            else if (c == ',')
+            {
+             
+                commaCount++;        // valid commas placed
+                if (commaCount > 1 || (i > 0 && i < input.Length - 1 && (input.Length - i - 1) % 4 != 0))
+                    return "false"; // Invalid comma
+            }
+            else
+            {
+                
+                return "false";      // Invalid character found
+            }
+        }
+
+                                
+        if (decimalFound && input.IndexOf('.') != input.LastIndexOf('.'))   //  There should be at most one decimal point
+        {
+            return "false";                     // More than one decimal point
+        }
+
+        return "true";
+    }
+
+    public static void Main()
+    {
+
+        string[] arr1 = { "1,093,222.04" };
+        string[] arr2 = { "1,093,22.04" };
+        string[] arr3 = { "0.232567" };
+        string[] arr4 = { "2,567.00.2" };
+
+        Console.WriteLine(FormattedNumber(arr1));
+        Console.WriteLine(FormattedNumber(arr2));
+        Console.WriteLine(FormattedNumber(arr3));
+        Console.WriteLine(FormattedNumber(arr4));
+    }
+}
+
+
+
