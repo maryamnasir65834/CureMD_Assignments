@@ -1,0 +1,62 @@
+// Have the function GasStation(strArr) take the strArr which will be an array consisting of following elements: N which will be the number of gas station in the circular  route and each subsequent  element will be the string g:c where g is the amounnt of gas in the gallons at the gas station and c will be the amount of gallons of gas needed to get the following station. For example: strArr may be ["4","3:1","2:2","1:2","0:1"]. Your goal is to return the index of the starting gas station that will allow you to travel around the whole route once, otherwise return the string impossible. For example in the above example, there are four gas stations, and your program should return the string 1 bcz the starting at station 1 you receive 3 gallons of gas and spend 1 getting to the next station . then you have 2 gallons +  2 more at the next station ans you spend 2 so you have two gallons when you get to the next(3rd) station you have then 3 but you spend 2 getting to the final station and at final station you receive 0 gallons and you spend your final gallon getting to stating point. Starting at any other gas station would make getting around the route impossible, so the answer is 1. if there are multiple gas stations that are possible to start  at, return the smallest index(of the gas station). N will be >= 2. 
+
+
+using System;
+
+public class GasStation
+{
+    public static string GasStationIndex(string[] strArr)
+    {
+        int Number = int.Parse(strArr[0]);
+        int[] GasAvailable(g) = new int[Number];                    
+        int[] CostOfGas(c) = new int[Number];			// An array to store the amount of gas required to travel from the current station to the next station(kitni cost aye gi to travel to next station)
+
+        
+        for (int i = 0; i < Number; i++)                        // Parsing the input array
+        {
+            var parts = strArr[i + 1].Split(':');
+            GasAvailable[i] = int.Parse(parts[0]);		//parts is an array of strings that results from splitting a single string by a colon (':') delimiter. 
+            CostOfGas[i] = int.Parse(parts[1]);
+        }
+
+        int TotalGasConsumed = 0;        // Keeps track of the total amount of gas available across all stations                              
+        int TotalCost = 0;               // Keeps track of the total amount of gas needed to travel across all segments of the route.
+        int ThisTankOfGas = 0;           // current amount of gas available in the tank
+        int startingIndex = 0;           // First index of gas station
+
+        for (int i = 0; i < Number; i++)
+        {
+            TotalGasConsumed += Gas[i];
+            TotalCost += CostOfGas[i];
+            ThisTankOfGas += Gas[i] - CostOfGas[i];
+
+                                                                    // If the tank is negative, we can't start from the current startIndex or any station before it
+            if (ThisTankOfGas < 0)
+            {
+                startingIndex = i + 1;                                 // Move to the next station 
+                ThisTankOfGas = 0;                                     // Reset to current tank
+            }
+        }
+
+                                                                    // If total gas is less than total cost, it's impossible to complete the process
+        return TotalGasConsumed >= TotalCost ? startingIndex.ToString() : "impossible";
+    }
+
+    public static void Main(string[] args)
+    {
+
+       
+        string[] testArray1 = { "4", "1:1", "2:2", "1:2", "0:1" };
+        string[] testArray2 = { "4", "0:1", "2:2", "1:2", "3:1" };
+     
+        string result1 = GasStationIndex(testArray1);
+        string result2 = GasStationIndex(testArray2);
+     
+        Console.WriteLine(result1);
+        Console.WriteLine(result2);
+    }
+}
+
+
+
+explain the question and the code accordingly step by step by viusalizing the values
