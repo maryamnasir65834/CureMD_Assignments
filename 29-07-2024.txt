@@ -1,0 +1,124 @@
+/*
+using System;
+
+public class BinaryDifference
+{
+    public static int OffBinary(string[] strArr)
+    {
+       
+        string decimalStringFromArray = strArr[0];                                 // Extracting decimal number and binary string from the array
+        string binaryStringFromArray = strArr[1];
+
+        
+        int decimalNumber = int.Parse(decimalStringFromArray);                     // Converting the decimal string to an integer
+
+       
+        string ActualBinaryString = Convert.ToString(decimalNumber, 2);  // Converting the decimal number to its binary 
+
+        int BinaryStringLength = binaryStringFromArray.Length;
+        int ActualBinaryStringLength = ActualBinaryString.Length;          // Determing the lengths of the binary strings
+
+
+      
+        if (ActualBinaryStringLength < BinaryStringLength)                  // If the lengths are different,  add  zeros
+        {
+                                                                       // Adding leading zeros to the correcxted binary string
+            ActualBinaryString = new string('0', BinaryStringLength - ActualBinaryStringLength) + ActualBinaryString;
+        }
+        else if (ActualBinaryStringLength > BinaryStringLength)
+        {
+                                                                        // Adding leading zeros to the given binary string
+            binaryStringFromArray = new string('0', ActualBinaryStringLength - BinaryStringLength) + binaryStringFromArray;
+        }
+
+      
+        int count = 0;                    // Initializing the count of different bits
+
+                                         // Compare the two binary strings and count the differences between them 
+        for (int i = 0; i < binaryStringFromArray.Length; i++)
+        {
+            if (ActualBinaryString[i] != binaryStringFromArray[i])
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public static void Main(string[] args)
+    {
+     
+        string[] Array1 = { "56", "011000" };
+        string[] Array2 = { "5624", "0010111111001" };
+        string[] Array3 = { "44", "111111" };
+        int result = OffBinary(Array1);
+        int result2 = OffBinary(Array2);
+        int result3 = OffBinary(Array3);
+        Console.WriteLine(result);
+        Console.WriteLine(result2);
+        Console.WriteLine(result3);
+    }
+}
+
+*/
+
+// Have the function GasStation(strArr) take the strArr which will be an array consisting of following elements: N which will be the number of gas station in the circular  route and each subsequent  element will be the string g:c where g is the amounnt of gas in the gallons at the gas station and c will be the amount of gallons of gas needed to get the following station. For example: strArr may be ["4","3:1","2:2","1:2","0:1"]. Your goal is to return the index of the starting gas station that will allow you to travel around the whole route once, otherwise return the string impossible. For example in the above example, there are four gas stations, and your program should return the string 1 bcz the starting at station 1 you receive 3 gallons of gas and spend 1 getting to the next station . then you have 2 gallons +  2 more at the next station ans you spend 2 so you have two gallons when you get to the next(3rd) station you have then 3 but you spend 2 getting to the final station and at final station you receive 0 gallons and you spend your final gallon getting to stating point. Starting at any other gas station would make getting around the route impossible, so the answer is 1. if there are multiple gas stations that are possible to start  at, return the smallest index(of the gas station). N will be >= 2. 
+
+
+using System;
+
+public class GasStation
+{
+    public static string GasStationIndex(string[] strArr)
+    {
+        int Number = int.Parse(strArr[0]);
+        int[] Gas = new int[Number];                    // Gas station
+        int[] CostOfGas = new int[Number];
+
+        
+        for (int i = 0; i < Number; i++)                        // Parsing the input array
+        {
+            var parts = strArr[i + 1].Split(':');
+            Gas[i] = int.Parse(parts[0]);
+            CostOfGas[i] = int.Parse(parts[1]);
+        }
+
+        int TotalGasConsumed = 0;        // determining if there is enough total gas to cover the total cost of traveling between stations.                               // Initializing
+        int TotalCost = 0;              
+        int ThisTankOfGas = 0;           // current amount of gas available in the tank
+        int startingIndex = 0;           // First index of gas station
+
+        for (int i = 0; i < Number; i++)
+        {
+            TotalGasConsumed += Gas[i];
+            TotalCost += CostOfGas[i];
+            ThisTankOfGas += Gas[i] - CostOfGas[i];
+
+                                                                    // If the tank is negative, we can't start from the current startIndex or any station before it
+            if (ThisTankOfGas < 0)
+            {
+                startingIndex = i + 1;                                 // Move to the next station 
+                ThisTankOfGas = 0;                                     // Reset to current tank
+            }
+        }
+
+                                                                    // If total gas is less than total cost, it's impossible to complete the process
+        return TotalGasConsumed >= TotalCost ? startingIndex.ToString() : "impossible";
+    }
+
+    public static void Main(string[] args)
+    {
+
+       
+        string[] testArray1 = { "4", "1:1", "2:2", "1:2", "0:1" };
+        string[] testArray2 = { "4", "0:1", "2:2", "1:2", "3:1" };
+     
+        string result1 = GasStationIndex(testArray1);
+        string result2 = GasStationIndex(testArray2);
+     
+        Console.WriteLine(result1);
+        Console.WriteLine(result2);
+    }
+}
+
