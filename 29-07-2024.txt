@@ -73,7 +73,7 @@ public class GasStation
     public static string GasStationIndex(string[] strArr)
     {
         int Number = int.Parse(strArr[0]);
-        int[] Gas = new int[Number];                    // Gas station
+        int[] GasAvailable = new int[Number];                    // Gas Available at each station station
         int[] CostOfGas = new int[Number];
 
         
