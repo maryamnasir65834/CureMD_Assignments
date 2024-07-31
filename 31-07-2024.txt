@@ -1,0 +1,206 @@
+// Have the function KUniqueCharacters(str) take the str parameter being passed and will find the longest substring that contains k unique characyters , where k will be the first character from string. The substring will start  from the second positin in the string bcz the first character will be the integer k. For Example: if str is "2aabbacbaa" there are several substrings that all contain 2 unique charcters, namely: ["aabba","ac","cb","ba"], but your program should  return "aabba" bcz it is the longest substring. if there are multiple longest substrings, then return the first substring encountered with the longest length. k will range from 1 to 6. 
+
+
+using System;
+using System.Collections.Generic;
+
+public class Program
+{
+    public static string KUniqueCharacters(string str)
+    {
+                                                // Checking string length must be at least 2for extracting k and the substring
+        if (str.Length < 2)
+            return "";
+
+                                                // The first character is the integer k as  in question
+        int k = int.Parse(str[0].ToString());
+
+                                                // Remaining of the string is the substring 
+        string substring = str.Substring(1);
+        int Number = substring.Length;
+
+                                                // Edge case if k> length of substring
+        if (k > Number)
+            return "";
+
+                                               // Variablesfor the longest substring
+        string LongestSubstring = "";
+        int MaximumLength = 0;
+
+   
+        int Begin = 0;
+        Dictionary<char, int> characterCount = new Dictionary<char, int>();  // dictionary for character nd its count
+
+        for (int Last = 0; Last < Number; Last++)
+        {
+            char EndCharacter = substring[Last];
+
+        
+            if (characterCount.ContainsKey(EndCharacter))
+                characterCount[EndCharacter]++;
+            else
+                characterCount[EndCharacter] = 1;
+
+                                                // if we have more than k unique characters
+            while (characterCount.Count > k)
+            {
+                char StartCharacter = substring[Begin];
+                characterCount[StartCharacter]--;
+
+                if (characterCount[StartCharacter] == 0)
+                    characterCount.Remove(StartCharacter);
+                Begin++;
+            }
+
+                                                        // Checking if the current part we defined size is the longest valid 
+            if (characterCount.Count == k)
+            {
+                int currentLength = Last - Begin + 1;
+                if (currentLength > MaximumLength)
+                {
+                    MaximumLength = currentLength;
+                    LongestSubstring = substring.Substring(Begin, currentLength);
+                }
+            }
+        }
+
+        return LongestSubstring;
+    }
+
+    public static void Main()
+    {
+     
+        string input = "2aabbacbaa";
+        string input1 = "3aabacbebebe";
+        string input2 = "2aabbcbbbadef";
+        string result = KUniqueCharacters(input);
+        string result1 = KUniqueCharacters(input1);
+        string result2 = KUniqueCharacters(input2);
+        Console.WriteLine(result);
+        Console.WriteLine(result1);
+        Console.WriteLine(result2);
+    }
+}
+
+
+// Have a function BlackjackHighest(strArr) take the strArr parameter being passed which will be an array of numbers and letters representing blackjack cards. Numbers in the arry will be written out. so for example strArr may be ["two", "three","ace","king"]. The full list of possibilities for strArr is: two,three,four,five,six,seven,eight,nine,ten,jack,queen,king,ace. Your program should output below,above,or blackjack signifying if you have blackjack(numbers add upto 21) or not and the highest card in your hand in relation to whether or not you have blackjack. if the array contains an ace but your hand will go above 21, you must contain the ace as a 1. you must and always try to stay below the 21 mark. so using the array mentioned above, output should be below king.The ace is counted as a 1 in this example bcz if it wasnt you would be above the 21 mark. Another example: if strArr was ["four","ten","king"], the output here should be above king. if you have a tie between a ten and a face card in your hand, return the face card as the "highest card". if you have multiple face cards, the order of importance is jack, queen, king. C SHARP CODE PLS Output should be correct
+/*
+using System;
+using System.Collections.Generic;
+
+public class Blackjack
+{
+    public static string BlackjackHighest(string[] strArr)
+    {
+        // Define card values and ranks
+        var cardValues = new Dictionary<string, int>
+        {
+            { "two", 2 },
+            { "three", 3 },
+            { "four", 4 },
+            { "five", 5 },
+            { "six", 6 },
+            { "seven", 7 },
+            { "eight", 8 },
+            { "nine", 9 },
+            { "ten", 10 },
+            { "jack", 10 },
+            { "queen", 10 },
+            { "king", 10 },
+            { "ace", 11 }
+        };
+
+                                                        
+        int total = 0;
+        int aceCount = 0;
+
+                                       
+        List<string> faceCards = new List<string>();
+
+        foreach (var card in strArr)
+        {
+            if (cardValues.ContainsKey(card))
+            {
+                int value = cardValues[card];
+                total += value;
+                if (card == "ace")
+                {
+                    aceCount++;
+                }
+                else if (value == 10) 
+                {
+                    faceCards.Add(card);
+                }
+            }
+        }
+
+
+        while (total > 21 && aceCount > 0)
+        {
+            total -= 10; 
+            aceCount--;
+        }
+
+        string highestCard = GetHighestCard(faceCards);
+
+        if (total == 21)
+        {
+            return $"blackjack {highestCard}";
+        }
+        else if (total > 21)
+        {
+            return $"above {highestCard}";
+        }
+        else
+        {
+            return $"below {highestCard}";
+        }
+    }
+
+
+    private static string GetHighestCard(List<string> faceCards)
+    {
+        if (faceCards.Count == 0)
+        {
+            return "none"; 
+        }
+
+       
+        if (faceCards.Contains("jack"))
+        {
+            return "jack";
+        }
+        if (faceCards.Contains("queen"))
+        {
+            return "queen";
+        }
+        if (faceCards.Contains("king"))
+        {
+            return "king";
+        }
+
+        return "none"; 
+    }
+}
+
+
+public class Program
+{
+    public static void Main()
+    {
+        string[] hand1 = { "four", "ten", "king" };
+        Console.WriteLine(Blackjack.BlackjackHighest(hand1));
+
+        string[] hand2 = { "two", "three", "ace", "king" };
+        Console.WriteLine(Blackjack.BlackjackHighest(hand2));
+
+        string[] hand3 = { "four", "ace", "ten" }; //actual:below none
+                                                   // expected:below ten
+        Console.WriteLine(Blackjack.BlackjackHighest(hand3));
+
+        string[] hand4 = {"ace", "queen" }; //  blackjack queen
+                                                //expected blackjackace
+        Console.WriteLine(Blackjack.BlackjackHighest(hand4));
+    }
+}
+*/
