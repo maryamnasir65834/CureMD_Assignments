@@ -1,0 +1,31 @@
+JAVASCRIPT:	var: Variables declared with var are function-scoped or globally scoped if declared
+	             outside a function. This means that if you declare a variable inside a function 
+		     with var, it is available throughout that function, even if it is declared within
+		     a block (like an if statement)
+
+		let: Variables declared with let are block-scoped. This means they are only accessible
+ 		     within the block they are defined, such as within a loop or an if statement.
+		
+
+
+TYPESCRIPT:	SuperScript of JavaScript. It has additional features that donot exsist in CURRENT VERSION of javascript
+		
+		STRONG TYPING: We donot need to specify the type of svariable in TS as we do in other programming languages
+
+		Alot of errors can be identified at compile time.
+s
+		We get intellisence in our code editors.
+
+		At compile time the tyoescrpt editors TRANSPILE the TS code into JS code for browsers to understand it.
+
+					npm install -g typescript
+					tsc --version
+
+			MAKING A NEW FOLDER: mkdir ts-hello (mkdir Folder_Name)
+
+			Making a file inside filder and opening it with VS Code: code main.ts
+
+			Opening vs code from cmd: (code .)
+
+
+https://www.youtube.com/watch?v=k5E2AVpwskos
