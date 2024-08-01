@@ -1,0 +1,376 @@
+//Have the function MostFreeTime(strArr) read the strArr parameter being passed which will represent  a full day and will be filled with events that span from time X to Y in the day. The format of each event will be hh:mmAM/PM-hh:mmAM/PM. For example if strArr may be ["10:00AM-12:30PM","02:00PM-02:45PM","09:10AM-09:50AM"]. Your program will have to output the longest amount of free time avialable between the start of first event and the end of your last event in the format:hh:mm. The start event should be the earliest event in the day and the latest event should be the latest event in the day.The output for the previous input would  therefore be 01:30(with the earliest event in the day starting at 09:10AM and the latest event ending at 02:45PM).The input will contain atleast 3 events and the events may be out of order.
+
+/*
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class Program
+{
+    public static string MostFreeTime(string[] strArr)
+    {
+                                                      // Converting event timeto minutes from midnight
+        List<Tuple<int, int>> Events = strArr     // list of tuples
+            .Select(evet =>
+            {
+                var Time = evet.Split('-');
+                int Starting = ConvertingTimeToMinutes(Time[0]);
+                int Ending = ConvertingTimeToMinutes(Time[1]);
+                return Tuple.Create(Starting, Ending);                // Tuple.Create(Starting, Ending): Creates a tuple (600, 750) for the event
+            })
+            .ToList();                                                 //   Tuple.Create(550, 590), // 09:10AM-09:50AM
+                                                                            Tuple.Create(600, 750), // 10:00AM-12:30PM
+                                                                            Tuple.Create(840, 885)  // 02:00PM-02:45PM
+
+                                                      // Sorting events by their start time
+        Events.Sort((a, b) => a.Item1.CompareTo(b.Item1));
+
+                                                     // Initializing variables for calculating free times
+        int EraliestStart = Events.First().Item1;
+        int LatestEnd = Events.Last().Item2;
+        int MaximumFreeTime = 0;
+        int previousEnd = EraliestStart;
+
+                                                      // Calculating the maximum free time between events
+        foreach (var evet in Events)
+        {
+            int FreeTime = evet.Item1 - previousEnd;         // The gap between the end of the last event and the start of the current event
+                                                             If the last processed event ended at 590 minutes (09:50 AM) and the current event starts at 600 minutes (10:00 AM), then FreeTime = 600 - 590 = 10 minutes.
+            if (FreeTime > MaximumFreeTime)
+            {
+                MaximumFreeTime = FreeTime;
+            }
+            previousEnd = evet.Item2;                         // previousEnd is updated to this new end time for the next iteration.
+        }
+
+                                                      // Checking free time after the last event until the end of the last event
+        int FinalFreeTime = LatestEnd - previousEnd;
+        if (FinalFreeTime > MaximumFreeTime)
+        {
+            MaximumFreeTime = FinalFreeTime;
+        }
+
+                                                        
+        return FormatingTime(MaximumFreeTime);
+    }                                                           // LatestEnd: This is the end time of the last event in minutes since midnight. It represents the end of the latest event.
+                                                                   previousEnd: This is the end time of the last event processed in the loop. At this point in the code, it represents the end time of the last event we have considered while calculating free time gaps between events.
+                                                                   FinalFreeTime: This is the amount of free time from the end of the last processed event (previousEnd) until the end of the last event of the day (LatestEnd).
+
+    private static int ConvertingTimeToMinutes(string time)
+    {
+                                                                //  Extracting the time parts
+        int Hour = int.Parse(time.Substring(0, 2));             //  time.Substring(0, 2): This extracts a substring from time, starting at index 0 and taking 2 characters. For a time string like "02:30PM", this would get "02".
+                                                                    int.Parse(...): Converts the extracted substring into an integer. In this example, "02" becomes the integer 2.
+        int Minute = int.Parse(time.Substring(3, 2));           //  time.Substring(3, 2): This extracts a substring starting at index 3 and takes 2 characters. For the same time string "02:30PM", this would get "30".
+                                                                    int.Parse(...): Converts this substring into an integer. Here, "30" becomes the integer 30.
+        string TimePeriod = time.Substring(5, 2);               //  time.Substring(5, 2): This extracts a substring starting at index 5 and takes 2 characters. For "02:30PM", this would get "PM".
+                                                                    string: The result is kept as a string, so "PM" remains "PM".       
+
+                                                           // Converting hour based on AM/PM
+        if (TimePeriod == "PM" && Hour != 12)
+        {
+           
+            Hour = Hour + 12;                               // 4 pm>>>>> 4+12hrs = 16 hrs
+        }
+        if (TimePeriod == "AM" && Hour == 12)
+        {
+            Hour = 0;
+        }
+
+                                                            // Converting time to minutes from midnight(12 AM)
+        return Hour * 60 + Minute;                          // For example, 2:30 PM becomes 14 * 60 + 30 = 870 minutes.
+    }
+
+    private static string FormatingTime(int Mins)            // Formating the output as "hh:mm"
+    {
+       
+        int Hours = Mins / 60;
+        int Minutes = Mins % 60;
+        return $"{Hours:D2}:{Minutes:D2}";                   // Padding with Leading Zeros: D2 ensures that the integer is formatted as a two-digit number. If the integer has fewer than two digits, it will be padded with leading zeros.
+    }
+
+    public static void Main()
+    {
+        string[] events = { "10:00AM-12:30PM", "02:00PM-02:45PM", "09:10AM-09:50AM" };
+        string[] events1 = { "12:15PM-02:00", "09:00AM-10:00AM", "10:30AM-12:00PM" };
+        //string[] events2 = { "12:15PM-02:00", "09:00AM-12:11PM", "02:02PM-04:00PM" };
+        Console.WriteLine(MostFreeTime(events));
+        Console.WriteLine(MostFreeTime(events1));
+
+    }
+}
+*/
+//Have the function MissingDigitII(str) take the str parameter, which will be simple mathematical formula with three numbers, a single operator(+,-,*,or/) and an equal sign(=) and return the two digits that complete the equation. In two of the numbers in the equation, there will be a single ? character, and your program should determine what digits are missing and return them seperated by a space. For example: if str is "38?5*3 = 1?595" then your program should output 6 1. The ? character will appear in both the first number and the last number in the mathematical expression.There will always be a unique solution.
+
+using Microsoft.VisualBasic.FileIO;
+using System;
+using System.Linq;
+
+public class Program
+{
+    public static string MissingDigitII(string str)
+    {
+        // Spliting the input string into parts
+        var PartsOfInput = str.Split(new[] { ' ', '=', '+', '-', '*', '/' }, StringSplitOptions.RemoveEmptyEntries);  // This option ensures that any empty substrings resulting from consecutive delimiters are removed from the result.
+        char OperatorCharacter = str.First(character => "+-*/".Contains(character));
+
+                                                                // Extracting the parts of the equation
+        string FirstNumber = PartsOfInput[0];
+        string SecondNumber = PartsOfInput[1];
+        string Result = PartsOfInput[2];
+
+                                                                // Iterating through all possible digits for replacing '?'
+        for (int FirstDigit = 0; FirstDigit <= 9; FirstDigit++)
+        {
+            for (int SecondDigit = 0; SecondDigit <= 9; SecondDigit++)
+            {
+                string NewNumber = FirstNumber.Replace('?', (char)('0' + FirstDigit));  //  if FirstDigit is 6, then '0' + 6 gives you 54, which corresponds to the character '6
+                                                                                        //  0= 48 in ASCII>>> so 48+6 = 54>>> which is 6's ASCII value
+                string NewResult = Result.Replace('?', (char)('0' + SecondDigit));
+
+                if (EndResult(NewNumber, SecondNumber, NewResult, OperatorCharacter))
+                {
+                    return $"{FirstDigit} {SecondDigit}";
+                }
+            }
+        }
+
+        throw new InvalidOperationException("No unique solution found.");
+    }
+
+    private static bool EndResult(string FirstNumber, string SecondNumber, string Result, char OperatorCharacter)
+    {
+                                                                // Converting strings into to integers
+        int num1 = int.Parse(FirstNumber);
+        int num2 = int.Parse(SecondNumber);
+        int res = int.Parse(Result);
+
+                                                                // Perform the operation based on the operator
+        switch (OperatorCharacter)
+        {
+            case '+':
+                return num1 + num2 == res;
+            case '-':
+                return num1 - num2 == res;
+            case '*':
+                return num1 * num2 == res;
+            case '/':
+                return num2 != 0 && num1 / num2 == res;
+            default:
+                throw new InvalidOperationException("Unknown operator.");
+        }
+    }
+
+    public static void Main()
+    {
+  
+        string input = "38?5*3 = 1?595";
+        string input1 = "56? * 106 = 5?678";
+        string input2 = "18?1 + 9 = 189?";
+        Console.WriteLine(MissingDigitII(input));
+        Console.WriteLine(MissingDigitII(input1));
+        Console.WriteLine(MissingDigitII(input2));
+    }
+}
+
+
+
+
+
+/*
+
+
+1. Splitting the Input String
+
+
+var PartsOfInput = str.Split(new[] { ' ', '=', '+', '-', '*', '/' }, StringSplitOptions.RemoveEmptyEntries);
+char OperatorCharacter = str.First(character => "+-/*".Contains(character));
+Visual Representation:
+
+Input String: "38?5*3 = 1?595"
+
+Split by Delimiters: ' ', '=', '+', '-', '*', '/'
+
+Result of Split: ["38?5", "3", "1?595"]
+
+Operator: '*' (Extracted from the string)
+
+2. Extracting Parts of the Equation
+
+
+string FirstNumber = PartsOfInput[0]; // "38?5"
+string SecondNumber = PartsOfInput[1]; // "3"
+string Result = PartsOfInput[2]; // "1?595"
+Visual Representation:
+
+FirstNumber: "38?5"
+SecondNumber: "3"
+Result: "1?595"
+3. Iterating Through Possible Digits
+csharp
+Copy code
+for (int FirstDigit = 0; FirstDigit <= 9; FirstDigit++)
+{
+    for (int SecondDigit = 0; SecondDigit <= 9; SecondDigit++)
+    {
+        string NewNumber = FirstNumber.Replace('?', (char)('0' + FirstDigit));
+        string NewResult = Result.Replace('?', (char)('0' + SecondDigit));
+
+        if (EndResult(NewNumber, SecondNumber, NewResult, OperatorCharacter))
+        {
+            return $"{FirstDigit} {SecondDigit}";
+        }
+    }
+}
+Visual Representation:
+
+Substituting Digits:
+For FirstDigit = 0: Replace ? in "38?5" to get "3805".
+For SecondDigit = 0: Replace ? in "1?595" to get "100595".
+Continue with all digits from 0 to 9.
+Example with Specific Digits:
+
+FirstDigit = 6, SecondDigit = 1
+NewNumber: Replace ? in "38?5" with 6 to get "3865".
+NewResult: Replace ? in "1?595" with 1 to get "116595".
+4. Checking the Result with EndResult
+
+
+private static bool EndResult(string FirstNumber, string SecondNumber, string Result, char OperatorCharacter)
+{
+    int num1 = int.Parse(FirstNumber);
+    int num2 = int.Parse(SecondNumber);
+    int res = int.Parse(Result);
+
+    switch (OperatorCharacter)
+    {
+        case '+':
+            return num1 + num2 == res;
+        case '-':
+            return num1 - num2 == res;
+        case '*':
+            return num1 * num2 == res;
+        case '/':
+            return num2 != 0 && num1 / num2 == res;
+        default:
+            throw new InvalidOperationException("Unknown operator.");
+    }
+}
+Visual Representation:
+
+Example Check:
+
+NewNumber: "3865"
+SecondNumber: "3"
+NewResult: "116595"
+Operator: '*'
+Operation: 3865 * 3 should equal 116595.
+
+Calculation:
+3865 * 3 = 116595
+Condition: 116595 == 116595 (True)
+Result: Since the equation holds true with these digits, the method returns "6 1".
+
+Summary Flow
+
+Split Input: Divide the string into parts based on delimiters and extract the operator.
+Iterate Digits: Replace ? in the numbers and result with digits from 0 to 9.
+Validate Equation: Use the EndResult method to check if the substituted values satisfy the equation.
+Return Result: Return the digits that make the equation valid.1. Splitting the Input String
+csharp
+Copy code
+var PartsOfInput = str.Split(new[] { ' ', '=', '+', '-', '*', '/' }, StringSplitOptions.RemoveEmptyEntries);
+char OperatorCharacter = str.First(character => "+-/*".Contains(character));
+Visual Representation:
+
+Input String: "38?5*3 = 1?595"
+
+Split by Delimiters: ' ', '=', '+', '-', '*', '/'
+
+Result of Split: ["38?5", "3", "1?595"]
+
+Operator: '*' (Extracted from the string)
+
+2. Extracting Parts of the Equation
+csharp
+Copy code
+string FirstNumber = PartsOfInput[0]; // "38?5"
+string SecondNumber = PartsOfInput[1]; // "3"
+string Result = PartsOfInput[2]; // "1?595"
+Visual Representation:
+
+FirstNumber: "38?5"
+SecondNumber: "3"
+Result: "1?595"
+3. Iterating Through Possible Digits
+csharp
+Copy code
+for (int FirstDigit = 0; FirstDigit <= 9; FirstDigit++)
+{
+    for (int SecondDigit = 0; SecondDigit <= 9; SecondDigit++)
+    {
+        string NewNumber = FirstNumber.Replace('?', (char)('0' + FirstDigit));
+        string NewResult = Result.Replace('?', (char)('0' + SecondDigit));
+
+        if (EndResult(NewNumber, SecondNumber, NewResult, OperatorCharacter))
+        {
+            return $"{FirstDigit} {SecondDigit}";
+        }
+    }
+}
+Visual Representation:
+
+Substituting Digits:
+For FirstDigit = 0: Replace ? in "38?5" to get "3805".
+For SecondDigit = 0: Replace ? in "1?595" to get "100595".
+Continue with all digits from 0 to 9.
+Example with Specific Digits:
+
+FirstDigit = 6, SecondDigit = 1
+NewNumber: Replace ? in "38?5" with 6 to get "3865".
+NewResult: Replace ? in "1?595" with 1 to get "116595".
+4. Checking the Result with EndResult
+csharp
+Copy code
+private static bool EndResult(string FirstNumber, string SecondNumber, string Result, char OperatorCharacter)
+{
+    int num1 = int.Parse(FirstNumber);
+    int num2 = int.Parse(SecondNumber);
+    int res = int.Parse(Result);
+
+    switch (OperatorCharacter)
+    {
+        case '+':
+            return num1 + num2 == res;
+        case '-':
+            return num1 - num2 == res;
+        case '*':
+            return num1 * num2 == res;
+        case '/':
+            return num2 != 0 && num1 / num2 == res;
+        default:
+            throw new InvalidOperationException("Unknown operator.");
+    }
+}
+Visual Representation:
+
+Example Check:
+
+NewNumber: "3865"
+SecondNumber: "3"
+NewResult: "116595"
+Operator: '*'
+Operation: 3865 * 3 should equal 116595.
+
+Calculation:
+3865 * 3 = 116595
+Condition: 116595 == 116595 (True)
+Result: Since the equation holds true with these digits, the method returns "6 1".
+
+Summary Flow
+Split Input: Divide the string into parts based on delimiters and extract the operator.
+Iterate Digits: Replace ? in the numbers and result with digits from 0 to 9.
+Validate Equation: Use the EndResult method to check if the substituted values satisfy the equation.
+Return Result: Return the digits that make the equation valid.
+
+  */
