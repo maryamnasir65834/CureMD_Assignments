@@ -1,0 +1,164 @@
+//Have the function MostFreeTime(strArr) read the strArr parameter being passed which will represent  a full day and will be filled with events that span from time X to Y in the day. The format of each event will be hh:mmAM/PM-hh:mmAM/PM. For example if strArr may be ["10:00AM-12:30PM","02:00PM-02:45PM","09:10AM-09:50AM"]. Your program will have to output the longest amount of free time avialable between the start of first event and the end of your last event in the format:hh:mm. The start event should be the earliest event in the day and the latest event should be the latest event in the day.The output for the previous input would  therefore be 01:30(with the earliest event in the day starting at 09:10AM and the latest event ending at 02:45PM).The input will contain atleast 3 events and the events may be out of order.C sharp code pls 
+
+/*
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class Program
+{
+    public static string MostFreeTime(string[] strArr)
+    {
+                                                      // Converting event timeto minutes from midnight
+        List<Tuple<int, int>> Events = strArr
+            .Select(evet =>
+            {
+                var Time = evet.Split('-');
+                int Starting = ConvertingTimeToMinutes(Time[0]);
+                int Ending = ConvertingTimeToMinutes(Time[1]);
+                return Tuple.Create(Starting, Ending);
+            })
+            .ToList();
+
+                                                      // Sorting events by their start time
+        Events.Sort((a, b) => a.Item1.CompareTo(b.Item1));
+
+                                                     // Initializing variables for calculating free times
+        int EraliestStart = Events.First().Item1;
+        int LatestEnd = Events.Last().Item2;
+        int MaximumFreeTime = 0;
+        int previousEnd = EraliestStart;
+
+                                                      // Calculating the maximum free time between events
+        foreach (var evet in Events)
+        {
+            int FreeTime = evet.Item1 - previousEnd;
+            if (FreeTime > MaximumFreeTime)
+            {
+                MaximumFreeTime = FreeTime;
+            }
+            previousEnd = evet.Item2;
+        }
+
+                                                      // Checking free time after the last event until the end of the last event
+        int FinalFreeTime = LatestEnd - previousEnd;
+        if (FinalFreeTime > MaximumFreeTime)
+        {
+            MaximumFreeTime = FinalFreeTime;
+        }
+
+                                                        
+        return FormatingTime(MaximumFreeTime);
+    }
+
+    private static int ConvertingTimeToMinutes(string time)
+    {
+                                                         // Extracting the time parts
+        int Hour = int.Parse(time.Substring(0, 2));
+        int Minute = int.Parse(time.Substring(3, 2));
+        string TimePeriod = time.Substring(5, 2);
+
+                                                           // Converting hour based on AM/PM
+        if (TimePeriod == "PM" && Hour != 12)
+        {
+           
+            Hour = Hour + 12;
+        }
+        if (TimePeriod == "AM" && Hour == 12)
+        {
+            Hour = 0;
+        }
+
+                                                            // Converting time to minutes from midnight(12 AM)
+        return Hour * 60 + Minute;
+    }
+
+    private static string FormatingTime(int Mins)            // Formating the output as "hh:mm"
+    {
+       
+        int Hours = Mins / 60;
+        int Minutes = Mins % 60;
+        return $"{Hours:D2}:{Minutes:D2}";
+    }
+
+    public static void Main()
+    {
+        string[] events = { "10:00AM-12:30PM", "02:00PM-02:45PM", "09:10AM-09:50AM" };
+        string[] events1 = { "12:15PM-02:00", "09:00AM-10:00AM", "10:30AM-12:00PM" };
+        //string[] events2 = { "12:15PM-02:00", "09:00AM-12:11PM", "02:02PM-04:00PM" };
+        Console.WriteLine(MostFreeTime(events));
+        Console.WriteLine(MostFreeTime(events1));
+
+    }
+}
+*/
+//Have the function MissingDigitII(str) take the str parameter, which will be simple mathematical formula with three numbers, a single operator(+,-,*,or/) and an equal sign(=) and return the two digits that complete the equation. In two of the numbers in the equation, there will be a single ? character, and your program should determine what digits are missing and return them seperated by a space. For example: if str is "38?5*3 = 1?595" then your program should output 6 1. The ? character will appear in both the first number and the last number in the mathematical expression.There will always be a unique solution.
+
+using System;
+using System.Linq;
+
+public class Program
+{
+    public static string MissingDigitII(string str)
+    {
+                                                                // Spliting the input string into parts
+        var PartsOfInput = str.Split(new[] { ' ', '=', '+', '-', '*', '/' }, StringSplitOptions.RemoveEmptyEntries);
+        char OperatorCharacter = str.First(character => "+-*/".Contains(character));
+
+                                                                // Extracting the parts of the equation
+        string FirstNumber = PartsOfInput[0];
+        string SecondNumber = PartsOfInput[1];
+        string Result = PartsOfInput[2];
+
+                                                                // Iterating through all possible digits for replacing '?'
+        for (int FirstDigit = 0; FirstDigit <= 9; FirstDigit++)
+        {
+            for (int SecondDigit = 0; SecondDigit <= 9; SecondDigit++)
+            {
+                string NewNumber = FirstNumber.Replace('?', (char)('0' + FirstDigit));
+                string NewResult = Result.Replace('?', (char)('0' + SecondDigit));
+
+                if (EndResult(NewNumber, SecondNumber, NewResult, OperatorCharacter))
+                {
+                    return $"{FirstDigit} {SecondDigit}";
+                }
+            }
+        }
+
+        throw new InvalidOperationException("No unique solution found.");
+    }
+
+    private static bool EndResult(string Number1, string Number2, string result, char OperatorCharacter)
+    {
+                                                                // Converting strings into to integers
+        int num1 = int.Parse(Number1);
+        int num2 = int.Parse(Number2);
+        int res = int.Parse(result);
+
+                                                                // Perform the operation based on the operator
+        switch (OperatorCharacter)
+        {
+            case '+':
+                return num1 + num2 == res;
+            case '-':
+                return num1 - num2 == res;
+            case '*':
+                return num1 * num2 == res;
+            case '/':
+                return num1 != 0 && num1 / num2 == res;
+            default:
+                throw new InvalidOperationException("Unknown operator.");
+        }
+    }
+
+    public static void Main()
+    {
+  
+        string input = "38?5*3 = 1?595";
+        string input1 = "56? * 106 = 5?678";
+        string input2 = "18?1 + 9 = 189?";
+        Console.WriteLine(MissingDigitII(input));
+        Console.WriteLine(MissingDigitII(input1));
+        Console.WriteLine(MissingDigitII(input2));
+    }
+}
