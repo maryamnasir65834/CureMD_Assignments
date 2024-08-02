@@ -1,0 +1,139 @@
+//Have the function Calculator(str) take the str parameter being passed and evaluate the mathematical expression within it. For example: if str were "2+(3-1)*3" the output should be 8. Another example: if str were "(2-0)(6/2)"  the output should be 6. There can be paranthesis in te string so you must evaluate it properly according to the rules of arithmatic. The string will contain the operators: +,-,/,*,(,and).If you have astring like this: #/#*# or #+#(#)/#, then evaluate from left to right. So divide then multiply for first one,and for the second one multiply , divide then add. The evaluations will be such that there will not  be any decimal operations, so you do not need to account for rounding and whatnot. C SHARP CODE PLS
+
+
+using System;
+
+public class program
+{
+    public static int Calculator(string expression)
+    {
+        expression = expression.Replace(" ", ""); // Removing the white whitespace
+
+
+        ParsingExp parser = new ParsingExp(expression);
+        return parser.ParseExpression();
+    }
+
+    private class ParsingExp
+    {
+        private string ExpressionGiven;
+        private int PositionOfExp;
+
+        public ParsingExp(string ExpressionGiven)
+        {
+            this.ExpressionGiven = ExpressionGiven;
+            this.PositionOfExp = 0;
+        }
+
+        public int ParseExpression()                        //  Function for parsing the expression
+        {
+            int Final = ParsingTerm();
+            while (PositionOfExp < ExpressionGiven.Length)
+            {
+                char Operation = Return();
+                if (Operation == '+' || Operation == '-')
+                {
+                    PositionOfExp++;
+                    int RightSide = ParsingTerm();
+                    Final = (Operation == '+') ? Final + RightSide : Final - RightSide;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return Final;
+        }
+
+        private int ParsingTerm()
+        {
+            int Final = ParseFactor();
+            while (PositionOfExp < ExpressionGiven.Length)
+            {
+                char operation = Return();
+                if (operation == '*' || operation == '/')
+                {
+                    PositionOfExp++;
+                    int RightSide = ParseFactor();
+                    Final = (operation == '*') ? Final * RightSide : Final / RightSide;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return Final;
+        }
+
+        private int ParseFactor()
+        {
+            if (Return() == '(')
+            {
+                PositionOfExp++;
+                int Result = ParseExpression();
+                if (Return() != ')')
+                {
+                    throw new InvalidOperationException("Mismatched parentheses");
+                }
+                PositionOfExp++;
+                return Result;
+            }
+            else
+            {
+                return ParsedNumber();
+            }
+        }
+
+        private int ParsedNumber()
+        {
+            int Starting = PositionOfExp;
+            while (PositionOfExp < ExpressionGiven.Length && char.IsDigit(ExpressionGiven[PositionOfExp]))
+            {
+                PositionOfExp++;
+            }
+            if (Starting == PositionOfExp)
+            {
+                throw new InvalidOperationException("Expected number");
+            }
+            return int.Parse(ExpressionGiven.Substring(Starting, PositionOfExp - Starting));
+        }
+
+        private char Return()
+        {
+            return PositionOfExp < ExpressionGiven.Length ? ExpressionGiven[PositionOfExp] : '\0';
+        }
+    }
+
+    public static void Main()
+    {
+        //string expression1 = "2+(3-1)*3";
+        //string expression2 = "(2-0)*(6/2)";
+        //string expression3 = "3+5/2";
+        //string expression4 = "(1+(4+5+2)-3)+(6+8)";
+        // expression5 = "#/#*#"; // Special case handling may be required
+        //string expression6 = "+#(#)/#"; // Special case handling may be required
+
+        String expression7 = "6*(4/2)+3*1";
+        String expression8 = "6/3-1";
+
+        //Console.WriteLine(Calculator(expression1));
+        //.WriteLine(Calculator(expression2));
+        //Console.WriteLine(Calculator(expression3));
+        //Console.WriteLine(Calculator(expression4));
+        //Console.WriteLine(Calculator(expression5));
+        //Console.WriteLine(Calculator(expression6));
+        Console.WriteLine(Calculator(expression7));
+        Console.WriteLine(Calculator(expression8));
+
+
+    }
+}
+
+// what does ngif do in angular         part of dom
+// what is 'ngModel' used for   
+// how do you create service  in Angular
+// What is 'EventEmitter' used in Angular
+//What does the  '*' symbol before a directive(like *ngif) indicate in Angular
+// What is 'ngOnlnit in Angular
+// What is an angular module:
+
