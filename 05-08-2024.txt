@@ -1,0 +1,88 @@
+//Have the function RunLength(str) take the str parameter being passed and return a compressed version of the string using the Run-Length encoding algorithm. This algorithm works by taking the occurence of each repeating character and outputting that number along with a single character of the repeating sequence. For example: "wwwggopp" would return 3w2g1o2p". The string will not contain any numbers, puntuation, or symbols. 
+
+/*
+using System;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+
+        string input = "wwwggopp";
+        string input1 = "aabbcde";
+        string input2 = "wwwbbbw";
+        //tring mpressed = RunLength(input);
+        string result = RunLength(input);
+        string result1 = RunLength(input1);
+        string result2 = RunLength(input2);
+
+        Console.WriteLine(result);
+        Console.WriteLine(result1);
+        Console.WriteLine(result2);
+    }
+
+    public static string RunLength(string str)
+    {
+        if (string.IsNullOrEmpty(str))
+        {
+            return str;
+        }
+
+        string Result = "";
+        int CountOfCharacters = 1;
+
+        for (int i = 1; i < str.Length; i++)
+        {
+            if (str[i] == str[i - 1])
+            {
+                CountOfCharacters++;
+            }
+            else
+            {
+                Result += CountOfCharacters.ToString() + str[i - 1];
+                CountOfCharacters = 1;
+            }
+        }
+
+      
+        Result += CountOfCharacters.ToString() + str[str.Length - 1];
+
+        return Result;
+    }
+}
+*/
+// Have the function NimWinner(arr) take the array of integers stored in arr which will represent the amount of coins in each pile. For example:[2,4,1,3] means there are four piles of coins and theer are 2 coins in the first pile, 4 in the second pile, etc. Nim is played by each player removing any number of coins from only one pile and the winner is the player who picks up the last coin. For example: if arr is [1,2,3] then for example player 1 can remove 2 coins from the last pile which results in [1,2,1]. Then player 2 can remove 1 coin from the first pile which results in [0,2,1], etc. The player that has the last possible move taking the last coin(s) from the pile wins the game. Your program should output either 1 or 2 which represents which player has a guaranteed win with the perfect play for the Nim Game. C SHARP CODE USING  X-OR Gate pls
+
+
+using System;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+ 
+        int[] piles = { 2, 4, 1, 3 };
+        int[] pile1 = { 1, 2, 3 };
+        int[] pile2 = { 1, 1, 1, 4, 5, 4 };
+        int winner = NimWinner(piles);
+        int winner1= NimWinner(pile1);
+        int winner2= NimWinner(pile2);
+        Console.WriteLine(winner);
+        Console.WriteLine(winner1);
+        Console.WriteLine(winner2);
+    }
+
+    public static int NimWinner(int[] arr)
+    {
+        int Sum = 0;
+
+       
+        foreach (int eachpile in arr)
+        {
+            Sum ^= eachpile;
+        }
+
+        
+        return Sum == 0 ? 2 : 1;
+    }
+}
