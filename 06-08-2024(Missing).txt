@@ -1,0 +1,135 @@
+
+
+//Have the function ArithGeo(arr) take the array of numbers stored in  arr and return the string "Arithmetic" if the sequence follows an arithmetic pattern or return "Geometric" if it follows a geometric pattern. if the sequence doesnt follow either pattern return -1. An arithmetic sequence is one where the difference between each of the number is consistent, whereas in gemetric sequence, each rerm after the first one is multiplied by some constant or common ratio. Arithmetic example: [2,4,6,8] and geometric example: [2,6,18,54]. Negative numbers may be entered as parameters, 0 will not be entered, and no array will contain all the same elements.
+/*
+using System;
+
+public class Program
+{
+    public static void Main()
+    {
+      
+        int[] arr1 = { 2, 4, 6, 8 }; 
+        int[] arr2 = { 2, 6, 18, 54 };
+        int[] arr3 = { 1, 2, 4, 8 };
+        int[] arr4 = { 5, 10, 15 };
+        int[] arr5 = { 2, 4, 16, 24 };
+
+
+        Console.WriteLine(ArithGeo(arr1)); 
+        Console.WriteLine(ArithGeo(arr2));
+        Console.WriteLine(ArithGeo(arr3)); 
+        Console.WriteLine(ArithGeo(arr4));
+        Console.WriteLine(ArithGeo(arr5));
+    }
+
+    public static string ArithGeo(int[] arr)
+    {
+        if (arr.Length < 2)
+        {
+            return "-1";                            // Not enough elements to determine the sequence type
+        }
+
+                                                    // Checking for arithmetic sequence
+        bool NumberIsArithmetic = true;
+        int DifferenceBetweenTerms = arr[1] - arr[0];       // checking difference between 2 terms(common difference)
+
+        for (int i = 2; i < arr.Length; i++)
+        {
+            if (arr[i] - arr[i - 1] != DifferenceBetweenTerms)
+            {
+                NumberIsArithmetic = false;
+                break;
+            }
+        }
+        if (NumberIsArithmetic)
+        {
+            return "Arithmetic";
+        }
+
+                                                       // Checking for geometric sequence
+        bool NumberIsGeometric = true;
+        if (arr[0] == 0)
+        {
+            return "-1";                              // No division by zero(infinity)
+        }
+
+        double CommonRatio = (double)arr[1] / arr[0];       // CommonRatio = 2nd/1st
+
+        for (int i = 2; i < arr.Length; i++)
+        {
+            if (arr[i - 1] == 0 || (double)arr[i] / arr[i - 1] != CommonRatio)
+            {
+                NumberIsGeometric = false;
+                break;
+            }
+        }
+        if (NumberIsGeometric)
+        {
+            return "Geometric";
+        }
+
+                                                        // OtherCase ( neither arithmetic nor geometric)
+        return "-1";
+    }
+}
+*/
+
+// Have the function StringScramble(str1, str2) take both parameters being passed and return the string true if the portion of str1 characters can be rearranged to match str2, otherwise return the string false. For example: if str1 is "rkqodlw" and str2 is "world" the output should return true. Punctuation and symbols wil not be entered with the parameter.
+
+
+using System;
+using System.Collections.Generic;
+
+public class Program
+{
+    public static void Main()
+    {
+       
+        Console.WriteLine(StringScramble("rkqodlw", "world")); 
+        Console.WriteLine(StringScramble("cdore", "coder"));   
+        Console.WriteLine(StringScramble("h3llko", "hello"));   
+    }
+
+    public static string StringScramble(string str1, string str2)
+    {
+                                                                    // Counting the frequency of characters in str1(string one)
+        var CharcterCountSTR1 = new Dictionary<char, int>();
+        foreach (var character in str1)
+        {
+            if (CharcterCountSTR1.ContainsKey(character))
+            {
+                CharcterCountSTR1[character]++;
+            }
+            else
+            {
+                CharcterCountSTR1[character] = 1;
+            }
+        }
+
+                                                                      // Counting the frequency of characters in str2(string two)
+        var CharacterCountSTR2 = new Dictionary<char, int>();
+        foreach (var chracter in str2)
+        {
+            if (CharacterCountSTR2.ContainsKey(chracter))
+            {
+                CharacterCountSTR2[chracter]++;
+            }
+            else
+            {
+                CharacterCountSTR2[chracter] = 1;
+            }
+        }
+
+                                                                        // Checking if str1 contains all characters of str2 with the required frequency
+        foreach (var KeyValuePair in CharacterCountSTR2)
+        {
+            if (!CharcterCountSTR1.ContainsKey(KeyValuePair.Key) || CharcterCountSTR1[KeyValuePair.Key] < KeyValuePair.Value)
+            {
+                return "false";
+            }
+        }
+
+        return "true";
+    }
+}
