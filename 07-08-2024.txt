@@ -1,0 +1,225 @@
+//Have the function Primes(num) take the num parameter being passed and return the string true if the parameter is a prime number, otherwise return the string false. The range will be between 1 and 2^16. 
+/*
+using System;
+
+public class Program
+{
+    public static void Main()
+    {
+     
+        Console.WriteLine(Primes(2));   
+        Console.WriteLine(Primes(4));   
+        Console.WriteLine(Primes(17));
+        Console.WriteLine(Primes(18));
+        Console.WriteLine(Primes(1709));
+    }
+
+    public static string Primes(int num)
+    {
+       
+        if (num <= 1)
+            return "false";
+        if (num == 2)
+            return "true";  // 2 (EVEN prime number)
+        if (num % 2 == 0)
+            return "false";  // Except all other even numbers
+
+                                            // Checking divisibility from 3 to sqrt(num)
+        int SquareRootOfNumber = (int)Math.Sqrt(num);
+        for (int i = 3; i <= SquareRootOfNumber; i += 2)
+        {
+            if (num % i == 0)
+                return "false";
+        }
+
+        return "true";
+    }
+}
+
+*/
+
+// Have the function FibonacciChecker(num) return the string yes if the number given is part of the Fibonacci sequence. This sequence is defined by: Fn=Fn-1+Fn-2, which means to find Fn you add the previous two numbers up. The first two numbers are 0 and 1, then comes 1,2,3,5 etc. if num is not in the Fibonacci sequence, return the string no.
+
+/*
+using System;
+
+public class Program
+{
+    public static void Main()
+    {
+      
+        Console.WriteLine(FibonacciChecker(0));  
+        Console.WriteLine(FibonacciChecker(1));  
+        Console.WriteLine(FibonacciChecker(2));  
+        Console.WriteLine(FibonacciChecker(3));  
+        Console.WriteLine(FibonacciChecker(4));  
+        Console.WriteLine(FibonacciChecker(5));  
+        Console.WriteLine(FibonacciChecker(34)); 
+        Console.WriteLine(FibonacciChecker(54));
+        Console.WriteLine(FibonacciChecker(8));
+    }
+
+    public static string FibonacciChecker(int num)
+    {
+        if (num < 0)
+        {
+            return "no";
+        }
+
+                                                                //  checking if a number is a perfect square
+        bool PerfectSqr(int n)
+        {
+            int sqr = (int)Math.Sqrt(n);
+            return sqr * sqr == n;
+        }
+
+        if (PerfectSqr(5 * num * num + 4) || PerfectSqr(5 * num * num - 4))                                                     // Checking the two conditions 
+            return "yes";
+        else
+            return "no";
+        
+    }
+}
+
+*/
+
+// Have the function PlusMinus(num) read the num parameter being passed which will be a combination of 1 or more single digits, and determine if its possible to seperate the digits with either a plus or minus sign to get the final expression equal to zer. For example: if num is 35132 then its possible to sepearte the digits the following way, 3-5+1+3_2, and this expression equals zero. Your program should return a string of the signs you used, so for this example your program should return -++-. if its not possible to get the digit expression to equal zero, return the string not possible. If there are multipke ways to get the final expression equal to zero, choose the one hat contains more minus characters. For example: if num is 26712 your program should return -+-- and not +-+-. 
+
+using System;
+
+public class Program
+{
+    public static void Main()
+    {
+  
+        Console.WriteLine(PlusMinus("35132"));
+        Console.WriteLine(PlusMinus("26712"));
+        Console.WriteLine(PlusMinus("199"));
+      
+    }
+
+    public static string PlusMinus(string num)
+    {
+                                                // Converting the input string to array
+        char[] Numbers = num.ToCharArray();
+        string BestSol = null;
+        int MaximumMinus = -1;
+
+        
+        BackTrackingApp(Numbers, 0, "", 0, ref BestSol, ref MaximumMinus);
+
+        return BestSol ?? "not possible";
+    }
+
+    private static void BackTrackingApp(char[] Numbers, int IndElememnt, string currentSigns, int CureentVal, ref string BestSol, ref int maxMinusCount)
+    {
+        if (IndElememnt == Numbers.Length - 1)
+        {
+                                                            // EvaluatING the final expression and check if it equals zero
+            int Result = EvaluateExpression(Numbers, currentSigns);
+            if (Result == 0)
+            {
+                int minusCount = CountMinusSigns(currentSigns);
+                if (minusCount > maxMinusCount)
+                {
+                    maxMinusCount = minusCount;
+                    BestSol = currentSigns;
+                }
+            }
+            return;
+        }
+
+                                                                                        // adding '+' 
+        BackTrackingApp(Numbers, IndElememnt + 1, currentSigns + "+", CureentVal + (Numbers[IndElememnt] - '0'), ref BestSol, ref maxMinusCount);
+                                                                                        // Trying '-' sign
+        BackTrackingApp(Numbers, IndElememnt + 1, currentSigns + "-", CureentVal - (Numbers[IndElememnt] - '0'), ref BestSol, ref maxMinusCount);
+    }
+
+    private static int EvaluateExpression(char[] Digits, string PlusMin)
+    {
+        int Result = Digits[0] - '0';
+        for (int i = 0; i < PlusMin.Length; i++)
+        {
+            if (PlusMin[i] == '+')
+                Result += Digits[i + 1] - '0';
+            else if (PlusMin[i] == '-')
+                Result -= Digits[i + 1] - '0';
+        }
+        return Result;
+    }
+
+    private static int CountMinusSigns(string PlusMinus)
+    {
+        int Counting = 0;
+        foreach (char character in PlusMinus)
+        {
+            if (character == '-') Counting++;
+        }
+        return Counting;
+    }
+}
+
+/*
+using System;
+
+public class Program
+{
+    public static void Main()
+    {
+       Console.WriteLine(PlusMinus("35132"));
+        Console.WriteLine(PlusMinus("26712"));
+        Console.WriteLine(PlusMinus("199"));
+    }
+
+    public static string PlusMinus(string num)
+    {
+                                                    // Converting the input string to an array of digits
+        char[] Numbers = num.ToCharArray();
+        string Result = TrySignCombinations(Numbers, 0, "", 0);
+
+        return Result ?? "not possible";
+    }
+
+    private static string TrySignCombinations(char[] digits, int index, string expression, int currentValue)
+    {
+        if (index == digits.Length - 1)
+        {
+            // Evaluate the final expression
+            if (currentValue == 0)
+            {
+                // Count the number of minus signs
+                int minusCount = CountMinusSigns(expression);
+                // Convert the result to match the required output
+                return expression;
+            }
+            return null;
+        }
+
+        // Try adding '+' sign
+        string resultWithPlus = TrySignCombinations(digits, index + 1, expression + "+", currentValue + (digits[index] - '0'));
+        if (resultWithPlus != null)
+        {
+            return resultWithPlus;
+        }
+
+        // Try adding '-' sign
+        string resultWithMinus = TrySignCombinations(digits, index + 1, expression + "-", currentValue - (digits[index] - '0'));
+        if (resultWithMinus != null)
+        {
+            return resultWithMinus;
+        }
+
+        return null;
+    }
+
+    private static int CountMinusSigns(string expression)
+    {
+        int count = 0;
+        foreach (char c in expression)
+        {
+            if (c == '-') count++;
+        }
+        return count;
+    }
+}
+*/
