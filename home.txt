@@ -1,0 +1,354 @@
+Parent project[where it has other remote projects to attach or open] like>> CureClient. Its Route tells us what remote projects are connected with it? 
+Example: CureClient is the parent component hosted at IIS
+
+
+
+import { State, Action, StateContext, Selector, createSelectMap, createDispatchMap } from '@ngxs/store';
+import { Injectable } from '@angular/core';
+import { NavigationData } from 'cure-client-lib/models/navigation';
+import { ModuleType } from 'cure-client-lib/enums';
+
+export class FetchTabs {
+  static readonly type = '[Tabs] Fetch Tabs';
+}
+
+export class UpdateTab {
+  static readonly type = '[Tabs] Update Tab';
+  constructor(public payload: { id: string, data: Partial<NavigationData>, resort?: boolean }) {} // payload is an object containing tab ID and data to update
+}
+
+export class AddTab {
+  static readonly type = '[Tabs] Add Tab';
+  constructor(public payload: NavigationData) {} // payload is the Tab object
+}
+
+export class RemoveTab {
+  static readonly type = '[Tabs] Remove Tab';
+  constructor(public payload: {id: string}) {}
+}
+
+export class UpdateActiveTabId {
+  static readonly type = '[Tabs] Update Active Tab Id';
+  constructor(public payload: { id: string, }) {} // payload is an object containing tab ID and data to update
+}
+
+export interface TabStateModel {
+  tabItems: NavigationData[];
+  activeTabId: string;
+}
+
+@State<TabStateModel>({
+  name: 'tabs',
+  defaults: {
+    tabItems: [],
+    activeTabId: ''
+  }
+})
+
+@Injectable({providedIn: 'root'})
+export class TabsState {
+
+  tabActions = createDispatchMap({
+    fetchTabs: FetchTabs,
+    addTab: AddTab,
+    updateTab: UpdateTab,
+    updateActiveTabId: UpdateActiveTabId,
+    removeTab: RemoveTab
+  });
+
+  tabSelector = createSelectMap({
+    tabs: TabsState.getTabs,
+    activeTabId: TabsState.getActiveTabId
+  });
+
+  //Selectors
+  @Selector()
+  static getTabs(state: TabStateModel) {
+    return state.tabItems;
+  }
+
+  @Selector()
+  static getActiveTabId(state: TabStateModel) {
+    return state.activeTabId;
+  }
+
+  // Action Handlers
+  @Action(AddTab)
+  addNavigationItem(ctx: StateContext<TabStateModel>, action: AddTab) {
+    const state = ctx.getState();
+    const newItem = { ...action.payload };
+    let patientTabs = state.tabItems.filter(tab => tab.moduleType == ModuleType.Patient);
+    let otherTabs = state.tabItems.filter(tab => tab.moduleType != ModuleType.Patient);
+    if(action.payload.moduleType == ModuleType.Patient) {
+      patientTabs.push(newItem);
+    }
+    else {
+      otherTabs.push(newItem);
+    }
+    const totalTabs = [...otherTabs, ...patientTabs];
+    ctx.patchState({
+      tabItems: totalTabs,
+      activeTabId: newItem.id
+    });
+  }
+
+  @Action(UpdateTab)
+  updateNavigationItem(ctx: StateContext<TabStateModel>, action: UpdateTab) {
+    const state = ctx.getState();
+    let updatedItems = state.tabItems.map(item =>
+      item.id === action.payload.id ? { ...item, ...action.payload.data } : item
+    );
+    if(action.payload.resort == true){
+      let patientTabs = updatedItems.filter(tab => tab.moduleType == ModuleType.Patient);
+      let otherTabs = updatedItems.filter(tab => tab.moduleType != ModuleType.Patient);
+      updatedItems = [...otherTabs, ...patientTabs];
+    }
+    ctx.patchState({
+      tabItems: updatedItems
+    });
+  }
+
+  @Action(UpdateActiveTabId)
+  updateActiveTabId(ctx: StateContext<TabStateModel>, action: UpdateActiveTabId) {
+    ctx.patchState({
+      activeTabId: action.payload.id
+    });
+  }
+
+  @Action(RemoveTab)
+  removeTab(ctx: StateContext<TabStateModel>, action: RemoveTab) {
+    const state = ctx.getState();
+    const updatedTabs = state.tabItems.filter(item =>
+      item.id != action.payload.id
+    );
+    ctx.patchState({
+      tabItems: updatedTabs
+    });
+  }
+}
+This is the multi-tab-feature.state.ts file problem is when peoject is build upon refreshing or pressing f5 all the tabs are lost only 1st tab in whihc it is opened by default gets presisted.
+i want to persist all the states or all the opened tabs
+
+
+what is store
+what is state
+what is actions
+what is route
+what is remote projects
+what is selactor
+what is diff bw npm i and npm x
+what is package.json
+how to set iis
+
+
+
+
+
+
+
+
+
+
+1. Store
+In the context of front-end frameworks like Redux or Vuex (state management systems), a store is an object that holds the entire application state. The store is the central location where all the data in your app is managed. It also provides methods for getting state, updating state (through actions or mutations), and subscribing to changes in state.
+
+In Redux:
+
+The store holds the state and allows access to the state via the getState() method.
+It also lets you dispatch actions to change the state.
+2. State
+State refers to the data or the current status of the application at any given point in time. State is typically mutable and can be updated through actions or events. In a front-end app, state includes things like user inputs, fetched data, or the current UI view.
+
+In a state management system like Redux or Vuex:
+
+State is usually stored centrally, and components access and modify it through actions or mutations.
+3. Actions
+In the context of state management (like Redux or Vuex), actions are payloads of information that send data from your application to the store to update the state. Actions are often triggered by user interactions or API calls, and they don't modify the state directly but trigger the appropriate reducers (or mutations in Vuex) to change the state.
+
+In Redux:
+
+Actions are plain JavaScript objects with a type property and optional data (payload).
+Example:
+js
+Copy code
+{
+  type: 'ADD_TODO',
+  payload: { text: 'Learn Redux' }
+}
+4. Route
+A route refers to the path or URL structure used to navigate different parts of a web application. It typically maps a URL to a specific component or view within the application. Routing systems in frameworks like React Router or Vue Router allow developers to define routes and handle navigation between them without reloading the page.
+
+In React Router:
+
+js
+Copy code
+<Route path="/about" component={AboutComponent} />
+5. Remote Projects
+Remote projects refer to software development projects where teams work remotely, often from different geographic locations. These projects typically rely on version control systems like Git and collaboration tools like Slack, Jira, or Trello to manage tasks and codebase changes.
+
+6. Selector
+A selector is a function that extracts or computes derived data from the state in a state management system. Selectors allow you to encapsulate and reuse logic to retrieve data from the store, making the code more modular and maintainable.
+
+In Redux:
+
+js
+Copy code
+const getTodos = (state) => state.todos;
+7. Difference between npm i and npx
+npm i (or npm install): This command installs the dependencies listed in your package.json file to your node_modules directory. If you're installing a specific package, it downloads and adds the package to the project.
+
+Example: npm i express
+npx: This is used to execute a package directly without globally installing it. It allows you to run a package's binaries from the command line, often used for one-time execution tasks.
+
+Example: npx create-react-app my-app will run create-react-app without installing it globally.
+8. package.json
+package.json is a file present in every Node.js project that holds metadata relevant to the project. It includes information such as:
+
+Project name, version, and description.
+List of dependencies (packages the project needs to run).
+Scripts to automate tasks like testing, starting the server, or building the project.
+Example:
+
+json
+Copy code
+{
+  "name": "my-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "jest"
+  }
+}
+9. How to Set Up IIS (Internet Information Services)
+To set up IIS (a web server developed by Microsoft) on Windows:
+
+Enable IIS on Windows:
+
+Go to Control Panel → Programs → Turn Windows features on or off.
+Scroll down and check Internet Information Services (IIS).
+Click OK and wait for IIS to install.
+Configure IIS:
+
+Open the IIS Manager (search for "IIS" in the Start menu).
+To add a new site: right-click on Sites → Add Website.
+Set the Site name, Physical path (folder containing the website files), and Binding (IP address and port).
+Set Application Pool:
+
+Go to Application Pools.
+Ensure your site is using the correct version of the .NET Framework (if applicable).
+Deploy a Website:
+
+Move your site files to the folder configured in IIS.
+Set up permissions for the folder to allow the IIS user access.
+Browse the Website:
+
+You should now be able to browse the website locally by visiting http://localhost or via the IP address configured.
+Would you like more details on any of these?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+To persist the state of your tabs across page refreshes (or after pressing F5), you can store the state in localStorage or sessionStorage and load it when the application starts. Here's how you can implement this in your TabsState:
+
+Step 1: Save the state to localStorage
+You'll need to save the current tab state (including active tabs) whenever a new tab is added, updated, or removed.
+
+Example of saving to localStorage:
+In each action handler where the tab state is modified, save the updated state to localStorage:
+
+ts
+Copy code
+private saveTabsToLocalStorage(state: TabStateModel) {
+  localStorage.setItem('tabsState', JSON.stringify(state));
+}
+Step 2: Load state from localStorage on application startup
+When the application starts (or when the TabsState is initialized), check if there's any saved state in localStorage and use it to initialize the state.
+
+In the state class, update the default state from localStorage if available:
+
+ts
+Copy code
+@State<TabStateModel>({
+  name: 'tabs',
+  defaults: (() => {
+    const savedTabs = localStorage.getItem('tabsState');
+    if (savedTabs) {
+      return JSON.parse(savedTabs);
+    }
+    return {
+      tabItems: [],
+      activeTabId: ''
+    };
+  })()
+})
+Step 3: Modify action handlers to save the state
+In each action that modifies the state (such as AddTab, UpdateTab, RemoveTab, etc.), after patching the state, call saveTabsToLocalStorage to persist the changes:
+
+ts
+Copy code
+@Action(AddTab)
+addNavigationItem(ctx: StateContext<TabStateModel>, action: AddTab) {
+  const state = ctx.getState();
+  const newItem = { ...action.payload };
+  let patientTabs = state.tabItems.filter(tab => tab.moduleType == ModuleType.Patient);
+  let otherTabs = state.tabItems.filter(tab => tab.moduleType != ModuleType.Patient);
+  if (action.payload.moduleType == ModuleType.Patient) {
+    patientTabs.push(newItem);
+  } else {
+    otherTabs.push(newItem);
+  }
+  const totalTabs = [...otherTabs, ...patientTabs];
+  ctx.patchState({
+    tabItems: totalTabs,
+    activeTabId: newItem.id
+  });
+
+  // Save to localStorage
+  this.saveTabsToLocalStorage(ctx.getState());
+}
+
+@Action(RemoveTab)
+removeTab(ctx: StateContext<TabStateModel>, action: RemoveTab) {
+  const state = ctx.getState();
+  const updatedTabs = state.tabItems.filter(item => item.id != action.payload.id);
+  ctx.patchState({
+    tabItems: updatedTabs
+  });
+
+  // Save to localStorage
+  this.saveTabsToLocalStorage(ctx.getState());
+}
+Step 4: Consider session-specific persistence
+If you only want to persist tabs during a session (but not across browser restarts), use sessionStorage instead of localStorage.
+
+Summary:
+Save the tab state in localStorage or sessionStorage whenever it's updated.
+Load the tab state from storage when the app initializes.
+Make sure every state-modifying action saves the updated state.
+This approach will allow your opened tabs to persist across refreshes.
+
+
+
+
+
+
