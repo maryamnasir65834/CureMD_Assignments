@@ -1,0 +1,518 @@
+CREATE TABLE UserInfoTable
+(
+    UserID INT IDENTITY(1,1) PRIMARY KEY,
+    FirstName NVARCHAR(100),
+    LastName NVARCHAR(100),
+    PhoneNumber NVARCHAR(15),
+    Email NVARCHAR(100),
+    PracticeName NVARCHAR(100)
+);
+
+
+
+
+IF EXISTS (SELECT * 
+           FROM sys.objects 
+           WHERE object_id = OBJECT_ID(N'SelectUserInfo') 
+                 AND type IN (N'P', N'PC'))
+BEGIN
+    DROP PROCEDURE SelectUserInfo;
+END;
+GO
+
+-- Create the SelectUserInfo procedure
+CREATE PROCEDURE SelectUserInfo
+    @Action NVARCHAR(10),  -- Specifies the operation: 'SELECT', 'INSERT', 'UPDATE', 'DELETE'
+    @UserID INT = NULL,     -- Optional for 'SELECT' to fetch all users, required for 'UPDATE' and 'DELETE'
+    @FirstName NVARCHAR(100) = NULL,  -- Required for 'INSERT' and 'UPDATE'
+    @LastName NVARCHAR(100) = NULL,
+    @PhoneNumber NVARCHAR(15) = NULL,
+    @Email NVARCHAR(100) = NULL,
+    @PracticeName NVARCHAR(100) = NULL
+AS
+BEGIN
+    -- SELECT operation: Fetch user details using JOIN
+    IF @Action = 'SELECT'
+    BEGIN
+        -- If @UserID is provided, fetch specific user
+        IF @UserID IS NOT NULL
+        BEGIN
+            SELECT 
+                U.VFNAME AS FirstName,
+                U.VLNAME AS LastName,
+                U.VPHONE AS PhoneNumber,
+                U.VEMAIL AS Email,
+                P.VNAME AS PracticeName
+            FROM 
+                cmusxhd AS U
+            JOIN 
+                pmprxft AS P ON U.IPRACID = P.IPRACID 
+            WHERE 
+                U.IUSERID = @UserID; 
+        END
+        ELSE
+        BEGIN
+            -- If @UserID is NULL, fetch all users
+			SELECT 
+                U.VFNAME AS FirstName,
+                U.VLNAME AS LastName,
+                U.VPHONE AS PhoneNumber,
+                U.VEMAIL AS Email,
+                P.VNAME AS PracticeName
+            FROM 
+                cmusxhd AS U
+            JOIN 
+                pmprxft AS P ON U.IPRACID = P.IPRACID 
+            WHERE 
+                U.IUSERID = @UserID;  -- Fetch all users from UserInfoTable
+        END
+    END
+
+    -- INSERT operation: Add a new user to UserInfoTable
+    ELSE IF @Action = 'INSERT'
+    BEGIN
+        INSERT INTO UserInfoTable (FirstName, LastName, PhoneNumber, Email, PracticeName)
+        VALUES (@FirstName, @LastName, @PhoneNumber, @Email, @PracticeName);
+    END
+
+    -- UPDATE operation: Update an existing user in UserInfoTable by UserID
+    ELSE IF @Action = 'UPDATE' AND @UserID IS NOT NULL
+    BEGIN
+        UPDATE UserInfoTable
+        SET
+            FirstName = @FirstName,
+            LastName = @LastName,
+            PhoneNumber = @PhoneNumber,
+            Email = @Email,
+            PracticeName = @PracticeName
+        WHERE 
+            UserID = @UserID;
+    END
+
+    -- DELETE operation: Remove a user from UserInfoTable by UserID
+    ELSE IF @Action = 'DELETE' AND @UserID IS NOT NULL
+    BEGIN
+        DELETE FROM UserInfoTable WHERE UserID = @UserID;
+    END
+END;
+
+
+
+
+
+
+DAL:
+
+
+using ApiAssignment2.Model;
+using System.Data;
+using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+
+namespace ApiAssignment2.DataAccessLayer
+{
+    public interface IUserDAL
+    {
+        void SaveUser(UserInfo user);       // Insert a new user
+        void UpdateUser(UserInfo user);     // Update an existing user
+        void DeleteUser(int id);            // Delete a user by ID
+        UserInfo GetUserById(int id);       // Get a user by ID
+        IEnumerable<UserInfo> GetAllUsers(); // Get all users
+    }
+
+    public class UserDAL : IUserDAL
+    {
+        private readonly string _connectionString;
+
+        public UserDAL(IConfiguration configuration)
+        {
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
+
+        // INSERT: Save new user
+        public void SaveUser(UserInfo user)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                using (var command = new SqlCommand("SelectUserInfo", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Action", "INSERT");
+                    command.Parameters.AddWithValue("@FirstName", user.FirstName);
+                    command.Parameters.AddWithValue("@LastName", user.LastName);
+                    command.Parameters.AddWithValue("@PhoneNumber", user.PhoneNumber);
+                    command.Parameters.AddWithValue("@Email", user.Email);
+                    command.Parameters.AddWithValue("@PracticeName", user.PracticeName);
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // UPDATE: Update existing user
+        public void UpdateUser(UserInfo user)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                using (var command = new SqlCommand("SelectUserInfo", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Action", "UPDATE");
+                    command.Parameters.AddWithValue("@FirstName", user.FirstName);
+                    command.Parameters.AddWithValue("@LastName", user.LastName);
+                    command.Parameters.AddWithValue("@PhoneNumber", user.PhoneNumber);
+                    command.Parameters.AddWithValue("@Email", user.Email);
+                    command.Parameters.AddWithValue("@PracticeName", user.PracticeName);
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // DELETE: Delete a user by ID
+        public void DeleteUser(int id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                using (var command = new SqlCommand("SelectUserInfo", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Action", "DELETE");
+                    command.Parameters.AddWithValue("@UserID", id);
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // GET: Get a user by ID
+        public UserInfo GetUserById(int id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                using (var command = new SqlCommand("SelectUserInfo", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Action", "SELECT");
+                    command.Parameters.AddWithValue("@UserID", id);
+
+                    connection.Open();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new UserInfo
+                            {
+                                FirstName = reader["FirstName"].ToString(),
+                                LastName = reader["LastName"].ToString(),
+                                PhoneNumber = reader["PhoneNumber"].ToString(),
+                                Email = reader["Email"].ToString(),
+                                PracticeName = reader["PracticeName"].ToString()
+                            };
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        // GET: Get all users
+        public IEnumerable<UserInfo> GetAllUsers()
+        {
+            var users = new List<UserInfo>();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                using (var command = new SqlCommand("SelectUserInfo", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Action", "SELECT");
+
+                    connection.Open();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            users.Add(new UserInfo
+                            {
+                                FirstName = reader["FirstName"].ToString(),
+                                LastName = reader["LastName"].ToString(),
+                                PhoneNumber = reader["PhoneNumber"].ToString(),
+                                Email = reader["Email"].ToString(),
+                                PracticeName = reader["PracticeName"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            return users;
+        }
+    }
+}
+
+
+
+BAL:
+
+
+using ApiAssignment2.DataAccessLayer;
+using ApiAssignment2.Model;
+using System.Collections.Generic;
+
+namespace ApiAssignment2.BusinessLayer
+{
+    public class UserBAL
+    {
+        public interface IUserBL
+        {
+            void RegisterUser(UserInfo user);
+            UserInfo GetUserById(int id);
+            IEnumerable<UserInfo> GetAllUsers();
+            void UpdateUser(UserInfo user); // Add update functionality
+            void DeleteUser(int id); // Add delete functionality
+        }
+
+        public class UserBL : IUserBL
+        {
+            private readonly IUserDAL _userDal;
+
+            public UserBL(IUserDAL userDal)
+            {
+                _userDal = userDal;
+            }
+
+            public void RegisterUser(UserInfo user)
+            {
+                _userDal.SaveUser(user);
+            }
+
+            public UserInfo GetUserById(int id)
+            {
+                return _userDal.GetUserById(id);
+            }
+
+            public IEnumerable<UserInfo> GetAllUsers()
+            {
+                return _userDal.GetAllUsers();
+            }
+
+            public void UpdateUser(UserInfo user)
+            {
+                _userDal.UpdateUser(user);
+            }
+
+            public void DeleteUser(int id)
+            {
+                _userDal.DeleteUser(id);
+            }
+        }
+    }
+}
+
+
+
+CONTROLLER:
+
+
+using Microsoft.AspNetCore.Mvc;
+using ApiAssignment2.BusinessLayer;
+using ApiAssignment2.Model;
+using System;
+
+namespace ApiAssignment2.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UsersController : ControllerBase
+    {
+        private readonly UserBAL.IUserBL _userBl;
+
+        public UsersController(UserBAL.IUserBL userBl)
+        {
+            _userBl = userBl;
+        }
+
+        // POST: Create/Register a new user
+        [HttpPost]
+        public IActionResult Register([FromBody] UserInfo user)
+        {
+            try
+            {
+                _userBl.RegisterUser(user);
+                return Ok(new { message = "User registered successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // GET: Retrieve a user by ID
+        [HttpGet("{id}")]
+        public IActionResult GetUserById(int id)
+        {
+            try
+            {
+                var user = _userBl.GetUserById(id);
+                if (user == null)
+                {
+                    return NotFound(new { message = "User not found" });
+                }
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // GET: Retrieve all users
+        [HttpGet]
+        public IActionResult GetAllUsers()
+        {
+            try
+            {
+                var users = _userBl.GetAllUsers();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // PUT: Update an existing user by ID
+        [HttpPut("{id}")]
+        public IActionResult UpdateUser(int id, [FromBody] UserInfo user)
+        {
+            try
+            {
+                user.Id = id; // Ensure the ID is set for the update operation
+                _userBl.UpdateUser(user);
+                return Ok(new { message = "User updated successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // DELETE: Remove a user by ID
+        [HttpDelete("{id}")]
+        public IActionResult DeleteUser(int id)
+        {
+            try
+            {
+                _userBl.DeleteUser(id);
+                return Ok(new { message = "User deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+    }
+}
+
+
+MODEL:
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace ApiAssignment2.Model
+{
+    public class UserInfo
+    {
+        public int Id { get; set; }
+        public string UserName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Password { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
+        public string PracticeName { get; set; }
+    }
+}
+
+
+Program.cs
+
+
+
+using ApiAssignment2.BusinessLayer; // Add this using directive for UserBAL
+using ApiAssignment2.DataAccessLayer; // Add this using directive for UserDAL
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllers();
+
+// Register UserBL and UserDAL in the DI container
+builder.Services.AddScoped<UserBAL.IUserBL, UserBAL.UserBL>();
+builder.Services.AddScoped<IUserDAL, UserDAL>();  // Assuming you have a UserDAL that implements IUserDAL
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+
+
+
+app.string.json:
+
+
+
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=release01;Database=LiveIssues_CureMD;User Id=curemd;Password=cure2000;"
+  },
+  
+    "Logging": {
+      "LogLevel": {
+        "Default": "Information",
+        "Microsoft.AspNetCore": "Warning"
+      }
+    },
+    "AllowedHosts": "*"
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+GO
