@@ -1,8 +1,24 @@
-Angular - Intro (Setup, Pre-req Installations)
-Angular (String Interpolation, Property Binding)
-Angular (Event Binding, Parent/Child Communication)
-Angular (Services)
-Angular (Directives)
-Angular (Forms)
-Angular (Routing)
-Angular (Http Request)
+Explainable prediction of clinical deterioration using routine hospital data: a subgroup-aware and calibration-focused study.
+A fairness-aware and robust machine learning framework for hospital readmission (or length-of-stay) prediction.
+Domain-robust deep learning for lesion or organ segmentation across heterogeneous medical imaging datasets
+Explainable and robust deep learning for disease classification from radiology images: a subgroup-aware evaluation.
+Multi-task deep learning for joint classification and localization in healthcare imaging.
+Generalizable and explainable deep learning for medical image classification or segmentation under dataset shift.//this one.
+ 
+ 
+Domain-generalized and robustness-aware deep learning for medical image classification or segmentation in real-world heterogeneous imaging conditions//this toooo
+ 
+Cross-dataset robust chest X-ray classification under image degradation with uncertainty and subgroup consistency analysis//this too
+ 
+((((((Haan, generally acceptable hote hain — lekin tab, jab diversity “substantial study design” ban jaye, sirf extra experiments nahi.)))))
+ 
+ 
+ 
+Iska seedha matlab tumhare liye
+Jo diversity maine suggest ki thi — jaise:
+cross-dataset testing
+subgroup analysis
+robustness under degradation/noise
+strong baselines
+explainability / uncertainty
+external validation
